@@ -265,7 +265,7 @@ const styles = StyleSheet.create({
     },
     flexCol: {
         display: "flex",
-        flexDirection: "col",
+        flexDirection: "column",
     },
     backgroundImage: {
         width: '100%',

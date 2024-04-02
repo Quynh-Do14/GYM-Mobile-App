@@ -34,4 +34,21 @@ export default class Constants {
             static value = "LoginScreen"
         }
     }
+
+    static InfoUset = class {
+        static List = [
+            {
+                value: 1,
+                label: "Chỉnh sửa thông tin"
+            },
+            {
+                value: 2,
+                label: "Lịch đăng kí"
+            },
+            {
+                value: 3,
+                label: "Tiến trình luyện tập"
+            },
+        ]
+    }
 }

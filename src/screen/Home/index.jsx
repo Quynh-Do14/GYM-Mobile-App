@@ -1,6 +1,7 @@
 import { Image, ScrollView, StyleSheet, Text, View } from "react-native";
 import card1 from "../../../assets/images/Card1.png";
 import card2 from "../../../assets/images/Card2.png";
+import MainLayout from "../../infrastructure/common/layouts/layout";
 
 const data = [
     {
@@ -26,41 +27,38 @@ const data = [
 ]
 const HomeScreen = () => {
     return (
-        <View style={styles.container}>
-            <ScrollView>
-                <Text style={styles.textTitle}>Đăng ký lịch tập</Text>
-                <View style={styles.content}>
-                    {
-                        data.map((it, index) => (
-                            <View key={index}>
-                                <Image
-                                    source={it.img}
-                                    style={{
-                                        position: "relative",
-                                        width: "100%",
-                                        borderRadius: 20
-                                    }}
-                                />
-                                <View
-                                    style={styles.card}
+        <MainLayout title={"Đăng ký lịch tập"}>
+            <View style={styles.content}>
+                {
+                    data.map((it, index) => (
+                        <View key={index}>
+                            <Image
+                                source={it.img}
+                                style={{
+                                    position: "relative",
+                                    width: "100%",
+                                    borderRadius: 20
+                                }}
+                            />
+                            <View
+                                style={styles.card}
+                            >
+                                <Text
+                                    style={styles.title}
                                 >
-                                    <Text
-                                        style={styles.title}
-                                    >
-                                        {it.title}
-                                    </Text>
-                                    <Text
-                                        style={styles.subTitle}
-                                    >
-                                        {it.subTitle}
-                                    </Text>
-                                </View>
+                                    {it.title}
+                                </Text>
+                                <Text
+                                    style={styles.subTitle}
+                                >
+                                    {it.subTitle}
+                                </Text>
                             </View>
-                        ))
-                    }
-                </View>
-            </ScrollView>
-        </View>
+                        </View>
+                    ))
+                }
+            </View>
+        </MainLayout>
     )
 }
 
@@ -77,7 +75,7 @@ const styles = StyleSheet.create({
     },
     flexCol: {
         display: "flex",
-        flexDirection: "col",
+        flexDirection: "column",
     },
     textTitle: {
         color: "#FFFFFF",
