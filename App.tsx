@@ -11,6 +11,7 @@ import BottomMenu from './src/infrastructure/common/layouts/bottom-menu';
 import { NavigationContainer } from '@react-navigation/native';
 import LoginScreen from './src/screen/Login';
 import Constants from './src/core/common/constants';
+import EditProfile from './src/screen/InfoUser/editProfile';
 
 const Stack = createNativeStackNavigator();
 const StackNavigator = () => {
@@ -29,6 +30,8 @@ const StackNavigator = () => {
         options={{ headerShown: false }}
       />
       <Stack.Screen name={Constants.Navigator.LoginScreen.value} component={LoginScreen} />
+      <Stack.Screen name={Constants.Navigator.InfoUserScreen.EditProfile.value} component={EditProfile} />
+
     </Stack.Navigator>
   );
 };
