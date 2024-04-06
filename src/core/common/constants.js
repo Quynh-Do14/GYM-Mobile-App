@@ -26,6 +26,9 @@ export default class Constants {
         }
         static InfoUserScreen = class {
             static value = "InfoUserScreen"
+            static EditProfile = class {
+                static value = "EditProfile"
+            }
         }
         static Navbar = class {
             static value = "Navbar"
@@ -35,10 +38,10 @@ export default class Constants {
         }
     }
 
-    static InfoUset = class {
+    static InfoUser = class {
         static List = [
             {
-                value: 1,
+                value: "EditProfile",
                 label: "Chỉnh sửa thông tin"
             },
             {

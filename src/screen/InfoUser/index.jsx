@@ -1,5 +1,5 @@
 import React from 'react'
-import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { Image, StyleSheet, Text, TouchableOpacity, View, Alert } from 'react-native'
 import MainLayout from '../../infrastructure/common/layouts/layout'
 import avatar from "../../../assets/images/avatar.png"
 import Infomation from './components/infomation'
@@ -7,18 +7,31 @@ import Avatar from './components/avatar'
 import Constants from '../../core/common/constants'
 const InfoUserScreen = ({ navigation }) => {
     const onLogOut = () => {
-        navigation.navigate(
-            Constants.Navigator.LoginScreen.value
-        )
+        Alert.alert('Đăng xuất', 'Bạn muốn đăng xuất?', [
+            {
+                text: 'Hủy',
+                onPress: () => console.log('Cancel Pressed'),
+                style: 'cancel',
+            },
+            {
+                text: 'Đăng xuất', onPress: () => {
+                    navigation.navigate(
+                        Constants.Navigator.LoginScreen.value
+                    )
+                },
+            }
+        ]);
     }
     return (
         <MainLayout
             title={"Hồ sơ cá nhân"}
             isBackButton={true}
         >
-            <View>
+            <View style={styles.content}>
                 <Avatar />
-                <Infomation />
+                <Infomation
+                    navigation={navigation}
+                />
 
             </View>
             <View>
@@ -32,7 +45,7 @@ const InfoUserScreen = ({ navigation }) => {
 
 export default InfoUserScreen
 const styles = StyleSheet.create({
-    flex1: {
+    content: {
         flex: 1
     },
     touchContent: {

@@ -1,4 +1,4 @@
-import { Animated, Image, ImageBackground, StyleSheet, Text, Easing, TextInput, TouchableOpacity, View } from 'react-native';
+import { Animated, Image, ImageBackground, StyleSheet, Text, Easing, TextInput, TouchableOpacity, View, KeyboardAvoidingView } from 'react-native';
 import bgImg from "../../../assets/images/loginBg.jpg";
 import { useState } from 'react';
 import Constants from '../../core/common/constants';
@@ -134,42 +134,44 @@ const LoginScreen = ({ navigation }) => {
                                     height: "100%"
                                 }
                             ]}>
-                                <View
-                                    style={{
-                                        display: "flex",
-                                        flexDirection: "column",
-                                        gap: 20
-                                    }}
-                                >
-                                    <TextInput
-                                        placeholder='Tên đăng nhập'
-                                        placeholderTextColor={"#ffffff"}
-                                        style={[
-                                            styles.fontStyle,
-                                            styles.inputStyle
-                                        ]} />
-                                    <TextInput
-                                        placeholder='Mật khẩu'
-                                        placeholderTextColor={"#ffffff"}
-                                        style={[
-                                            styles.fontStyle,
-                                            styles.inputStyle
-                                        ]} />
+                                <KeyboardAvoidingView>
                                     <View
                                         style={{
                                             display: "flex",
-                                            flexDirection: "row",
-                                            justifyContent: "flex-end"
-                                        }}>
-                                        <Text
+                                            flexDirection: "column",
+                                            gap: 20
+                                        }}
+                                    >
+                                        <TextInput
+                                            placeholder='Tên đăng nhập'
+                                            placeholderTextColor={"#ffffff"}
+                                            style={[
+                                                styles.fontStyle,
+                                                styles.inputStyle
+                                            ]} />
+                                        <TextInput
+                                            placeholder='Mật khẩu'
+                                            placeholderTextColor={"#ffffff"}
+                                            style={[
+                                                styles.fontStyle,
+                                                styles.inputStyle
+                                            ]} />
+                                        <View
                                             style={{
-                                                fontSize: 13,
-                                                fontWeight: 500,
-                                                color: "#D0FD3E",
-                                            }}
-                                        >Quên mật khẩu</Text>
+                                                display: "flex",
+                                                flexDirection: "row",
+                                                justifyContent: "flex-end"
+                                            }}>
+                                            <Text
+                                                style={{
+                                                    fontSize: 13,
+                                                    fontWeight: 500,
+                                                    color: "#D0FD3E",
+                                                }}
+                                            >Quên mật khẩu</Text>
+                                        </View>
                                     </View>
-                                </View>
+                                </KeyboardAvoidingView>
                                 <TouchableOpacity
                                     style={[
                                         styles.btnStyle
@@ -196,35 +198,38 @@ const LoginScreen = ({ navigation }) => {
                                     height: "100%"
                                 }
                             ]}>
-                                <View
-                                    style={{
-                                        display: "flex",
-                                        flexDirection: "column",
-                                        gap: 20
-                                    }}
-                                >
-                                    <TextInput
-                                        placeholder='Tên đăng nhập'
-                                        placeholderTextColor={"#ffffff"}
-                                        style={[
-                                            styles.fontStyle,
-                                            styles.inputStyle
-                                        ]} />
-                                    <TextInput
-                                        placeholder='Mật khẩu'
-                                        placeholderTextColor={"#ffffff"}
-                                        style={[
-                                            styles.fontStyle,
-                                            styles.inputStyle
-                                        ]} />
-                                    <TextInput
-                                        placeholder='Nhập lại mật khẩu'
-                                        placeholderTextColor={"#ffffff"}
-                                        style={[
-                                            styles.fontStyle,
-                                            styles.inputStyle
-                                        ]} />
-                                </View>
+                                <KeyboardAvoidingView>
+                                    <View
+                                        style={{
+                                            display: "flex",
+                                            flexDirection: "column",
+                                            gap: 20
+                                        }}
+                                    >
+                                        <TextInput
+                                            placeholder='Tên đăng nhập'
+                                            placeholderTextColor={"#ffffff"}
+                                            style={[
+                                                styles.fontStyle,
+                                                styles.inputStyle
+                                            ]} />
+                                        <TextInput
+                                            placeholder='Mật khẩu'
+                                            placeholderTextColor={"#ffffff"}
+                                            style={[
+                                                styles.fontStyle,
+                                                styles.inputStyle
+                                            ]} />
+                                        <TextInput
+                                            placeholder='Nhập lại mật khẩu'
+                                            placeholderTextColor={"#ffffff"}
+                                            style={[
+                                                styles.fontStyle,
+                                                styles.inputStyle
+                                            ]} />
+                                    </View>
+                                </KeyboardAvoidingView>
+
                                 <TouchableOpacity
                                     style={[
                                         styles.btnStyle
@@ -288,7 +293,7 @@ const styles = StyleSheet.create({
     },
     inputStyle: {
         borderBottomWidth: 1,
-        borderBottomColor: "#FFFFFF",
+        borderBottomColor: "#2C2C2E",
     },
     btnStyle: {
         backgroundColor: "#D0FD3E",
@@ -297,5 +302,5 @@ const styles = StyleSheet.create({
         display: "flex",
         justifyContent: "center",
         alignItems: "center"
-    }
+    },
 })
