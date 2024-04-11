@@ -16,7 +16,7 @@ const InfoUserScreen = ({ navigation }) => {
             {
                 text: 'Đăng xuất', onPress: () => {
                     navigation.navigate(
-                        Constants.Navigator.LoginScreen.value
+                        Constants.Navigator.Auth.LoginScreen.value
                     )
                 },
             }

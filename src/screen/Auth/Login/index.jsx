@@ -1,7 +1,7 @@
 import { Animated, Image, ImageBackground, StyleSheet, Text, Easing, TextInput, TouchableOpacity, View, KeyboardAvoidingView } from 'react-native';
-import bgImg from "../../../assets/images/loginBg.jpg";
+import bgImg from "../../../../assets/images/loginBg.jpg";
 import { useState } from 'react';
-import Constants from '../../core/common/constants';
+import Constants from '../../../core/common/constants';
 const LoginScreen = ({ navigation }) => {
     const [tabSelect, setTabSelect] = useState(1)
     const [rotation] = useState(new Animated.Value(0));
@@ -25,6 +25,12 @@ const LoginScreen = ({ navigation }) => {
     const onLogin = () => {
         navigation.navigate(
             Constants.Navigator.Navbar.value,
+            {},
+        )
+    }
+    const onForgotPassword = () => {
+        navigation.navigate(
+            Constants.Navigator.Auth.ForgotPasswordScreen.value,
             {},
         )
     }
@@ -155,20 +161,26 @@ const LoginScreen = ({ navigation }) => {
                                             style={[
                                                 styles.fontStyle,
                                                 styles.inputStyle
-                                            ]} />
+                                            ]}
+                                        />
                                         <View
                                             style={{
                                                 display: "flex",
                                                 flexDirection: "row",
                                                 justifyContent: "flex-end"
                                             }}>
-                                            <Text
-                                                style={{
-                                                    fontSize: 13,
-                                                    fontWeight: 500,
-                                                    color: "#D0FD3E",
-                                                }}
-                                            >Quên mật khẩu</Text>
+                                            <TouchableOpacity
+                                                onPress={onForgotPassword}
+                                            >
+                                                <Text
+                                                    style={{
+                                                        fontSize: 13,
+                                                        fontWeight: 500,
+                                                        color: "#D0FD3E",
+                                                    }}
+                                                >Quên mật khẩu
+                                                </Text>
+                                            </TouchableOpacity>
                                         </View>
                                     </View>
                                 </KeyboardAvoidingView>

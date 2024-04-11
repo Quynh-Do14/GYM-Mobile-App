@@ -9,15 +9,17 @@ import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import BottomMenu from './src/infrastructure/common/layouts/bottom-menu';
 import { NavigationContainer } from '@react-navigation/native';
-import LoginScreen from './src/screen/Login';
+import LoginScreen from './src/screen/Auth/Login';
 import Constants from './src/core/common/constants';
 import EditProfile from './src/screen/InfoUser/editProfile';
+import ForgotPasswordScreen from './src/screen/Auth/ForgotPassword';
+import VerifyScreen from './src/screen/Auth/Verify';
 
 const Stack = createNativeStackNavigator();
 const StackNavigator = () => {
   return (
     <Stack.Navigator
-      initialRouteName={Constants.Navigator.LoginScreen.value}
+      initialRouteName={Constants.Navigator.Auth.LoginScreen.value}
       screenOptions={{ headerShown: false }}
     >
       {/* <Stack.Screen name="HomePage" component={HomePage} />
@@ -29,8 +31,11 @@ const StackNavigator = () => {
         component={BottomMenu}
         options={{ headerShown: false }}
       />
-      <Stack.Screen name={Constants.Navigator.LoginScreen.value} component={LoginScreen} />
+      <Stack.Screen name={Constants.Navigator.Auth.LoginScreen.value} component={LoginScreen} />
       <Stack.Screen name={Constants.Navigator.InfoUserScreen.EditProfile.value} component={EditProfile} />
+      <Stack.Screen name={Constants.Navigator.Auth.ForgotPasswordScreen.value} component={ForgotPasswordScreen} />
+      <Stack.Screen name={Constants.Navigator.Auth.VerifyScreen.value} component={VerifyScreen} />
+
 
     </Stack.Navigator>
   );
