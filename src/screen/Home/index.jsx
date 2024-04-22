@@ -26,6 +26,7 @@ const data = [
     },
 ]
 const HomeScreen = () => {
+    
     return (
         <MainLayout title={"Trang chủ"}>
             <View style={styles.content}>

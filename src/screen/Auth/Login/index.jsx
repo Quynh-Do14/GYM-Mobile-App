@@ -7,7 +7,7 @@ const LoginScreen = ({ navigation }) => {
     const [tabSelect, setTabSelect] = useState(1)
     const [rotation] = useState(new Animated.Value(0));
 
-    const [fullName, setFullName] = useState("");
+    const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
@@ -36,6 +36,27 @@ const LoginScreen = ({ navigation }) => {
         }
     }
 
+    const onSignupAsync = async () => {
+        try {
+            await authService.register(
+                {
+                    name: name,
+                    email: email,
+                    username: username,
+                    password: password,
+                    roles: ["user"],
+                },
+                () => { }
+            ).then((response) => {
+                if (response) {
+                    setTabSelect(1)
+                }
+            });
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
     const onChangeTab = (value) => {
         Animated.timing(rotation, {
             toValue: 1,
@@ -46,6 +67,8 @@ const LoginScreen = ({ navigation }) => {
             rotation.setValue(0);
         });
         setTabSelect(value)
+        setUsername("");
+        setPassword("")
     }
 
     const spin = rotation.interpolate({
@@ -60,30 +83,6 @@ const LoginScreen = ({ navigation }) => {
         )
     }
 
-    const onRegisterAsync = async (values) => {
-
-        const data = {
-            fullName: fullName,
-            email: email,
-            username: username,
-            password: password,
-            roles: ["user"],
-            dob: "2000-01-01",
-            gender: "male"
-        };
-        try {
-            await authService.register(
-                data,
-                () => { }
-            ).then((response) => {
-                if (response) {
-                    setTabSelect(1)
-                }
-            });
-        } catch (error) {
-            console.error(error);
-        }
-    };
 
     return (
         <View style={styles.container}>
@@ -216,6 +215,7 @@ const LoginScreen = ({ navigation }) => {
                                                     styles.fontStyle,
                                                     styles.inputStyle
                                                 ]}
+                                                secureTextEntry={true}
                                             />
                                             <View
                                                 style={{
@@ -282,12 +282,14 @@ const LoginScreen = ({ navigation }) => {
                                                 style={[
                                                     styles.fontStyle,
                                                     styles.inputStyle
-                                                ]} />
+                                                ]}
+                                                keyboardType="email-address"
+                                            />
                                             <TextInput
                                                 placeholder='Họ tên'
                                                 placeholderTextColor={"#ffffff"}
-                                                value={fullName}
-                                                onChangeText={(e) => setFullName(e)}
+                                                value={name}
+                                                onChangeText={(e) => setName(e)}
                                                 style={[
                                                     styles.fontStyle,
                                                     styles.inputStyle
@@ -306,11 +308,12 @@ const LoginScreen = ({ navigation }) => {
                                                 placeholderTextColor={"#ffffff"}
                                                 value={password}
                                                 onChangeText={(e) => setPassword(e)}
+                                                secureTextEntry={true}
                                                 style={[
                                                     styles.fontStyle,
                                                     styles.inputStyle
                                                 ]} />
-                                            <TextInput
+                                            {/* <TextInput
                                                 placeholder='Nhập lại mật khẩu'
                                                 placeholderTextColor={"#ffffff"}
                                                 value={passwordConfrim}
@@ -318,7 +321,7 @@ const LoginScreen = ({ navigation }) => {
                                                 style={[
                                                     styles.fontStyle,
                                                     styles.inputStyle
-                                                ]} />
+                                                ]} /> */}
                                         </View>
                                     </KeyboardAvoidingView>
 
@@ -326,7 +329,7 @@ const LoginScreen = ({ navigation }) => {
                                         style={[
                                             styles.btnStyle
                                         ]}
-                                        onPress={onRegisterAsync}
+                                        onPress={onSignupAsync}
                                     >
                                         <Text
                                             style={[
