@@ -2,12 +2,14 @@ import axios from "axios";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const axiosInstance = axios.create({
-  baseURL: process.env.BASE_URL,
+  // baseURL: process.env.REACT_APP_BASE_URL,
+  baseURL: "http://192.168.1.5:8080",
   headers: {
     "Content-Type": "application/json",
   },
   timeout: 10000,
 });
+
 axiosInstance.interceptors.request.use(
   (config) => {
     const token = AsyncStorage.getItem("token") && AsyncStorage.getItem("token");

@@ -4,7 +4,6 @@ import { clearStorage, saveToken } from "../../../utils/storage";
 
 class AuthService {
     async login(data, setLoading) {
-        console.log('data', data);
         setLoading(true)
         try {
             return await RequestService
@@ -12,28 +11,15 @@ class AuthService {
                     ...data
                 })
                 .then(response => {
-                    if (response.accessToken) {
-                        saveToken({
-                            accessToken: response.accessToken,
-                            refreshToken: response.refreshToken,
-                            userId: response.id
-                        });
-                        //     // saveToken(response.accessToken)
+                    if (response) {
+                        saveToken(response.token)
                     }
                     setLoading(false)
                     // SuccessMessage("Đăng nhập thành công", "")
                     return response;
                 });
         } catch (error) {
-            // if (error?.response?.data?.errors[0]?.defaultMessage) {
-            //     FailMessage(messageConfig(error?.response?.data?.errors[0]?.defaultMessage), "")
-            // }
-            // if (error.response.data.message) {
-            //     FailMessage(messageConfig(error.response.data.message), "")
-            // }
-            // else {
-            //     FailMessage("Đăng nhập không thành công", "Tài khoản của bạn chưa đúng")
-            // }
+            // FailMessage("Đăng nhập không thành công", "Tài khoản của bạn chưa đúng")
             console.error(error)
         } finally {
             setLoading(false);
