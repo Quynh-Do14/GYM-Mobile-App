@@ -27,7 +27,7 @@ const data = [
 ]
 const HomeScreen = () => {
     return (
-        <MainLayout title={"Đăng ký lịch tập"}>
+        <MainLayout title={"Trang chủ"}>
             <View style={styles.content}>
                 {
                     data.map((it, index) => (

@@ -23,6 +23,7 @@ const LoginScreen = ({ navigation }) => {
                 },
                 () => { }
             ).then((response) => {
+                console.log("response", response);
                 if (response) {
                     navigation.navigate(
                         Constants.Navigator.Navbar.value,
