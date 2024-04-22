@@ -5,7 +5,23 @@ import avatar from "../../../assets/images/avatar.png"
 import Infomation from './components/infomation'
 import Avatar from './components/avatar'
 import Constants from '../../core/common/constants'
+import authService from '../../infrastructure/repositories/auth/service/auth.service'
 const InfoUserScreen = ({ navigation }) => {
+
+    const onLogOutAsync = async () => {
+        try {
+            await authService.logout(
+                () => { }
+            ).then(() => {
+                navigation.navigate(
+                    Constants.Navigator.Auth.LoginScreen.value
+                )
+            });
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
     const onLogOut = () => {
         Alert.alert('Đăng xuất', 'Bạn muốn đăng xuất?', [
             {
@@ -15,13 +31,12 @@ const InfoUserScreen = ({ navigation }) => {
             },
             {
                 text: 'Đăng xuất', onPress: () => {
-                    navigation.navigate(
-                        Constants.Navigator.LoginScreen.value
-                    )
+                    onLogOutAsync()
                 },
             }
         ]);
     }
+
     return (
         <MainLayout
             title={"Hồ sơ cá nhân"}

@@ -24,18 +24,28 @@ export default class Constants {
         static HomeScreen = class {
             static value = "HomeScreen"
         }
+
+        static Navbar = class {
+            static value = "Navbar"
+        }
         static InfoUserScreen = class {
             static value = "InfoUserScreen"
             static EditProfile = class {
                 static value = "EditProfile"
             }
         }
-        static Navbar = class {
-            static value = "Navbar"
+        static Auth = class {
+            static LoginScreen = class {
+                static value = "LoginScreen"
+            }
+            static ForgotPasswordScreen = class {
+                static value = "ForgotPasswordScreen"
+            }
+            static VerifyScreen = class {
+                static value = "VerifyScreen"
+            }
         }
-        static LoginScreen = class {
-            static value = "LoginScreen"
-        }
+
     }
 
     static InfoUser = class {
