@@ -1,6 +1,6 @@
 import { Endpoint } from "../../../../core/common/apiLink";
 import { RequestService } from "../../../utils/response";
-import { clearStorage, saveToken } from "../../../utils/storage";
+import { clearStorage, saveToken, setStorage } from "../../../utils/storage";
 
 class AuthService {
     async login(data, setLoading) {
@@ -12,7 +12,10 @@ class AuthService {
                 })
                 .then(response => {
                     if (response) {
-                        saveToken(response.token)
+                        saveToken({
+                            token: response.accessToken,
+                            name: response.name
+                        });
                     }
                     setLoading(false)
                     // SuccessMessage("Đăng nhập thành công", "")
@@ -77,10 +80,9 @@ class AuthService {
         setLoading(true)
         try {
             return await RequestService.
-                post(Endpoint.Auth.Register, {
+                post(Endpoint.Auth.Signup, {
                     ...data
                 }).then(response => {
-                    console.log("response", response);
                     // setLoading(false)
                     // SuccessMessage("Đăng kí thành công", "Hãy xác thực Email để tham gia thi")
                     return response;

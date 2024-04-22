@@ -32,12 +32,12 @@ export const bottomNavigator = [
         unFocused: cartIcon,
         focused: cartActiveIcon
     },
-    {
-        component: PracticeScreen,
-        name: Constants.Navigator.PracticeScreen.value,
-        unFocused: notificationIcon,
-        focused: notificationActiveIcon
-    },
+    // {
+    //     component: PracticeScreen,
+    //     name: Constants.Navigator.PracticeScreen.value,
+    //     unFocused: notificationIcon,
+    //     focused: notificationActiveIcon
+    // },
     {
         component: InfoUserScreen,
         name: Constants.Navigator.InfoUserScreen.value,

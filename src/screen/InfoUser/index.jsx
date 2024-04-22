@@ -1,13 +1,11 @@
 import React from 'react'
 import { Image, StyleSheet, Text, TouchableOpacity, View, Alert } from 'react-native'
 import MainLayout from '../../infrastructure/common/layouts/layout'
-import avatar from "../../../assets/images/avatar.png"
 import Infomation from './components/infomation'
 import Avatar from './components/avatar'
 import Constants from '../../core/common/constants'
 import authService from '../../infrastructure/repositories/auth/service/auth.service'
 const InfoUserScreen = ({ navigation }) => {
-
     const onLogOutAsync = async () => {
         try {
             await authService.logout(

@@ -1,13 +1,34 @@
 import React, { useState } from 'react'
-import { KeyboardAvoidingView, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { Button, Image, KeyboardAvoidingView, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import MainLayout from '../../infrastructure/common/layouts/layout'
-
+import DatePicker from 'react-native-date-picker';
+import calenderIcon from '../../../assets/images/calendar-outline.png'
+import { convertDate, convertDateOnly } from '../../infrastructure/helper/helper';
 const BookingScreen = () => {
     const [fullName, setFullName] = useState("");
     const [email, setEmail] = useState("");
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [passwordConfrim, setPasswordConfrim] = useState("");
+    const [selectedDate, setSelectedDate] = useState(new Date());
+    const [showDatePicker, setShowDatePicker] = useState(false);
+
+    const handleDateChange = (newDate) => {
+        setSelectedDate(newDate);
+    };
+
+    const handlePress = () => {
+        setShowDatePicker(true);
+    };
+
+    const handleConfirm = (date) => {
+        setSelectedDate(date);
+        setShowDatePicker(false);
+    };
+
+    const handleCancel = () => {
+        setShowDatePicker(false);
+    };
     return (
         <MainLayout
             title={"Đăng kí lịch tập"}
@@ -33,42 +54,45 @@ const BookingScreen = () => {
 
                                 <View>
                                     <Text style={styles.labelStyle}>
-                                        Email
+                                        Chọn ngày
                                     </Text>
                                     <TextInput
-                                        placeholder='Email'
+                                        placeholder='Tên đăng nhập'
                                         placeholderTextColor={"#ffffff"}
                                         style={[
                                             { position: "relative" },
                                             styles.fontStyle,
                                             styles.inputStyle
-                                        ]} />
-                                </View>
-                                <View>
-                                    <Text style={styles.labelStyle}>
-                                        Email
-                                    </Text>
-                                    <TextInput
-                                        placeholder='Email'
-                                        placeholderTextColor={"#ffffff"}
-                                        style={[
-                                            { position: "relative" },
-                                            styles.fontStyle,
-                                            styles.inputStyle
-                                        ]} />
-                                </View>
-                                <View>
-                                    <Text style={styles.labelStyle}>
-                                        Email
-                                    </Text>
-                                    <TextInput
-                                        placeholder='Email'
-                                        placeholderTextColor={"#ffffff"}
-                                        style={[
-                                            { position: "relative" },
-                                            styles.fontStyle,
-                                            styles.inputStyle
-                                        ]} />
+                                        ]}
+                                        value={convertDateOnly(selectedDate.toString())}
+
+                                    />
+                                    <TouchableOpacity
+                                        onPress={handlePress}
+                                        style={{
+                                            position: "absolute",
+                                            right: 0,
+                                            top: 10
+                                        }}>
+                                        <Image source={calenderIcon} />
+                                    </TouchableOpacity>
+                                    {showDatePicker && (
+                                        <View>
+                                            <DatePicker
+                                                // modal
+                                                date={selectedDate}
+                                                onDateChange={handleDateChange}
+                                                onCancel={handleCancel}
+                                                onConfirm={handleConfirm}
+                                                mode="date"
+                                                textColor="#FFFFFF"
+                                                style={styles.datePicker}
+                                                confirmText={"OK"}
+                                                showConfirmButton={true}
+                                            />
+                                            <Button title="Chọn ngày" onPress={handleCancel} />
+                                        </View>
+                                    )}
                                 </View>
                             </View>
                         </View>
@@ -77,7 +101,7 @@ const BookingScreen = () => {
             </View>
             <View>
                 <TouchableOpacity style={styles.btnStyle}>
-                    <Text style={styles.textBtnStyle}>Cập nhập</Text>
+                    <Text style={styles.textBtnStyle}>Đặt lịch</Text>
                 </TouchableOpacity>
             </View>
 
@@ -169,5 +193,13 @@ const styles = StyleSheet.create({
         fontFamily: "Roboto Regular",
         fontSize: 16,
         fontWeight: "900",
-    }
+    },
+    datePicker: {
+        backgroundColor: '#fff',
+        borderRadius: 10,
+        borderWidth: 1,
+        borderColor: '#ccc',
+        padding: 10,
+        marginTop: 10,
+    },
 })
