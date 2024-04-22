@@ -1,10 +1,39 @@
-import { Animated, Image, ImageBackground, StyleSheet, Text, Easing, TextInput, TouchableOpacity, View, KeyboardAvoidingView } from 'react-native';
+import { Animated, Image, ImageBackground, StyleSheet, Text, Easing, TextInput, TouchableOpacity, View, KeyboardAvoidingView, ScrollView } from 'react-native';
 import bgImg from "../../../../assets/images/loginBg.jpg";
 import { useState } from 'react';
 import Constants from '../../../core/common/constants';
+import authService from '../../../infrastructure/repositories/auth/service/auth.service';
 const LoginScreen = ({ navigation }) => {
     const [tabSelect, setTabSelect] = useState(1)
     const [rotation] = useState(new Animated.Value(0));
+
+    const [fullName, setFullName] = useState("");
+    const [email, setEmail] = useState("");
+    const [username, setUsername] = useState("");
+    const [password, setPassword] = useState("");
+    const [passwordConfrim, setPasswordConfrim] = useState("");
+
+    const [dataRegister, setDataRegister] = useState({ username: '', password: '' })
+    const onLoginAsync = async () => {
+        try {
+            await authService.login(
+                {
+                    username: username,
+                    password: password,
+                },
+                () => { }
+            ).then((response) => {
+                if (response) {
+                    navigation.navigate(
+                        Constants.Navigator.Navbar.value,
+                        {},
+                    )
+                }
+            });
+        } catch (error) {
+            console.error(error);
+        }
+    }
 
     const onChangeTab = (value) => {
         Animated.timing(rotation, {
@@ -22,18 +51,39 @@ const LoginScreen = ({ navigation }) => {
         inputRange: [0, 1],
         outputRange: ['0deg', '360deg'],
     });
-    const onLogin = () => {
-        navigation.navigate(
-            Constants.Navigator.Navbar.value,
-            {},
-        )
-    }
+
     const onForgotPassword = () => {
         navigation.navigate(
             Constants.Navigator.Auth.ForgotPasswordScreen.value,
             {},
         )
     }
+
+    const onRegisterAsync = async (values) => {
+
+        const data = {
+            fullName: fullName,
+            email: email,
+            username: username,
+            password: password,
+            roles: ["user"],
+            dob: "2000-01-01",
+            gender: "male"
+        };
+        try {
+            await authService.register(
+                data,
+                () => { }
+            ).then((response) => {
+                if (response) {
+                    setTabSelect(1)
+                }
+            });
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
     return (
         <View style={styles.container}>
 
@@ -132,132 +182,164 @@ const LoginScreen = ({ navigation }) => {
                     {
                         tabSelect == 1
                             ?
-                            <View style={[
-                                styles.flexCol,
-                                {
-                                    gap: 20,
-                                    justifyContent: "space-between",
-                                    height: "100%"
-                                }
-                            ]}>
-                                <KeyboardAvoidingView>
-                                    <View
-                                        style={{
-                                            display: "flex",
-                                            flexDirection: "column",
-                                            gap: 20
-                                        }}
-                                    >
-                                        <TextInput
-                                            placeholder='Tên đăng nhập'
-                                            placeholderTextColor={"#ffffff"}
-                                            style={[
-                                                styles.fontStyle,
-                                                styles.inputStyle
-                                            ]} />
-                                        <TextInput
-                                            placeholder='Mật khẩu'
-                                            placeholderTextColor={"#ffffff"}
-                                            style={[
-                                                styles.fontStyle,
-                                                styles.inputStyle
-                                            ]}
-                                        />
+                            <ScrollView>
+                                <View style={[
+                                    styles.flexCol,
+                                    {
+                                        gap: 20,
+                                        justifyContent: "space-between",
+                                        height: "100%"
+                                    }
+                                ]}>
+                                    <KeyboardAvoidingView>
                                         <View
                                             style={{
                                                 display: "flex",
-                                                flexDirection: "row",
-                                                justifyContent: "flex-end"
-                                            }}>
-                                            <TouchableOpacity
-                                                onPress={onForgotPassword}
-                                            >
-                                                <Text
-                                                    style={{
-                                                        fontSize: 13,
-                                                        fontWeight: 500,
-                                                        color: "#D0FD3E",
-                                                    }}
-                                                >Quên mật khẩu
-                                                </Text>
-                                            </TouchableOpacity>
+                                                flexDirection: "column",
+                                                gap: 20
+                                            }}
+                                        >
+                                            <TextInput
+                                                placeholder='Tên đăng nhập'
+                                                placeholderTextColor={"#ffffff"}
+                                                onChangeText={(e) => setUsername(e)}
+                                                style={[
+                                                    styles.fontStyle,
+                                                    styles.inputStyle
+                                                ]} />
+                                            <TextInput
+                                                placeholder='Mật khẩu'
+                                                placeholderTextColor={"#ffffff"}
+                                                onChangeText={(e) => setPassword(e)}
+                                                style={[
+                                                    styles.fontStyle,
+                                                    styles.inputStyle
+                                                ]}
+                                            />
+                                            <View
+                                                style={{
+                                                    display: "flex",
+                                                    flexDirection: "row",
+                                                    justifyContent: "flex-end"
+                                                }}>
+                                                <TouchableOpacity
+                                                    onPress={onForgotPassword}
+                                                >
+                                                    <Text
+                                                        style={{
+                                                            fontSize: 13,
+                                                            fontWeight: 500,
+                                                            color: "#D0FD3E",
+                                                        }}
+                                                    >Quên mật khẩu
+                                                    </Text>
+                                                </TouchableOpacity>
+                                            </View>
                                         </View>
-                                    </View>
-                                </KeyboardAvoidingView>
-                                <TouchableOpacity
-                                    style={[
-                                        styles.btnStyle
-                                    ]}
-                                    onPress={onLogin}
-                                >
-                                    <Text
+                                    </KeyboardAvoidingView>
+                                    <TouchableOpacity
                                         style={[
-                                            styles.fontStyle,
-                                            {
-                                                color: "#1C1C1E",
-                                            }
+                                            styles.btnStyle
                                         ]}
-                                    > Đăng nhập
-                                    </Text>
-                                </TouchableOpacity>
-                            </View>
-                            :
-                            <View style={[
-                                styles.flexCol,
-                                {
-                                    gap: 20,
-                                    justifyContent: "space-between",
-                                    height: "100%"
-                                }
-                            ]}>
-                                <KeyboardAvoidingView>
-                                    <View
-                                        style={{
-                                            display: "flex",
-                                            flexDirection: "column",
-                                            gap: 20
-                                        }}
+                                        onPress={onLoginAsync}
                                     >
-                                        <TextInput
-                                            placeholder='Tên đăng nhập'
-                                            placeholderTextColor={"#ffffff"}
+                                        <Text
                                             style={[
                                                 styles.fontStyle,
-                                                styles.inputStyle
-                                            ]} />
-                                        <TextInput
-                                            placeholder='Mật khẩu'
-                                            placeholderTextColor={"#ffffff"}
-                                            style={[
-                                                styles.fontStyle,
-                                                styles.inputStyle
-                                            ]} />
-                                        <TextInput
-                                            placeholder='Nhập lại mật khẩu'
-                                            placeholderTextColor={"#ffffff"}
-                                            style={[
-                                                styles.fontStyle,
-                                                styles.inputStyle
-                                            ]} />
-                                    </View>
-                                </KeyboardAvoidingView>
+                                                {
+                                                    color: "#1C1C1E",
+                                                }
+                                            ]}
+                                        > Đăng nhập
+                                        </Text>
+                                    </TouchableOpacity>
+                                </View>
+                            </ScrollView>
+                            :
+                            <ScrollView>
+                                <View style={[
+                                    styles.flexCol,
+                                    {
+                                        gap: 20,
+                                        justifyContent: "space-between",
+                                        height: "100%"
+                                    }
+                                ]}>
+                                    <KeyboardAvoidingView>
+                                        <View
+                                            style={{
+                                                display: "flex",
+                                                flexDirection: "column",
+                                                gap: 20
+                                            }}
+                                        >
+                                            <TextInput
+                                                placeholder='Email'
+                                                placeholderTextColor={"#ffffff"}
+                                                value={email}
+                                                onChangeText={(e) => setEmail(e)}
+                                                style={[
+                                                    styles.fontStyle,
+                                                    styles.inputStyle
+                                                ]} />
+                                            <TextInput
+                                                placeholder='Họ tên'
+                                                placeholderTextColor={"#ffffff"}
+                                                value={fullName}
+                                                onChangeText={(e) => setFullName(e)}
+                                                style={[
+                                                    styles.fontStyle,
+                                                    styles.inputStyle
+                                                ]} />
+                                            <TextInput
+                                                placeholder='Tên đăng nhập'
+                                                placeholderTextColor={"#ffffff"}
+                                                value={username}
+                                                onChangeText={(e) => setUsername(e)}
+                                                style={[
+                                                    styles.fontStyle,
+                                                    styles.inputStyle
+                                                ]} />
+                                            <TextInput
+                                                placeholder='Mật khẩu'
+                                                placeholderTextColor={"#ffffff"}
+                                                value={password}
+                                                onChangeText={(e) => setPassword(e)}
+                                                style={[
+                                                    styles.fontStyle,
+                                                    styles.inputStyle
+                                                ]} />
+                                            <TextInput
+                                                placeholder='Nhập lại mật khẩu'
+                                                placeholderTextColor={"#ffffff"}
+                                                value={passwordConfrim}
+                                                onChangeText={(e) => setPasswordConfrim(e)}
+                                                style={[
+                                                    styles.fontStyle,
+                                                    styles.inputStyle
+                                                ]} />
+                                        </View>
+                                    </KeyboardAvoidingView>
 
-                                <TouchableOpacity
-                                    style={[
-                                        styles.btnStyle
-                                    ]}
-                                >
-                                    <Text
+                                    <TouchableOpacity
                                         style={[
-                                            styles.fontStyle,
-                                            {
-                                                color: "#1C1C1E",
-                                            }
+                                            styles.btnStyle
                                         ]}
-                                    > Đăng kí
-                                    </Text>
-                                </TouchableOpacity>
-                            </View>
+                                        onPress={onRegisterAsync}
+                                    >
+                                        <Text
+                                            style={[
+                                                styles.fontStyle,
+                                                {
+                                                    color: "#1C1C1E",
+                                                }
+                                            ]}
+                                        > Đăng kí
+                                        </Text>
+                                    </TouchableOpacity>
+                                </View>
+                            </ScrollView>
+
                     }
 
                 </Animated.View>
