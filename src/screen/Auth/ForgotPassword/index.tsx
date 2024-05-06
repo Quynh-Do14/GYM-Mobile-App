@@ -2,7 +2,7 @@ import React from 'react'
 import MainLayout from '../../../infrastructure/common/layouts/layout'
 import { KeyboardAvoidingView, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 
-const ForgotPasswordScreen = ({ navigation }) => {
+const ForgotPasswordScreen = ({ navigation }: any) => {
     const onGoBack = () => {
         navigation.goBack()
     }

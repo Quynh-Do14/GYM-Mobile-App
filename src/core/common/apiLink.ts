@@ -5,5 +5,6 @@ export class Endpoint {
         // static Register = "/api/signup"
         static Login = "/login"
         static Signup = "/signup"
+        static Profile = "/profile"
     }
 };

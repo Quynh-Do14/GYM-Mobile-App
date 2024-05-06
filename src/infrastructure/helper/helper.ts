@@ -1,7 +1,8 @@
 import moment from "moment";
-// import noImgShow from "../../assets/img/no-img-show.jpg";
+import { any } from "prop-types";
+import Constants from "../../core/common/constants";
 
-export const validateFields = (isImplicitChange = false, key, isCheck, setError, error, message) => {
+export const validateFields = (isImplicitChange: boolean, key: any, isCheck: boolean, setError: Function, error: any, message: string) => {
     if (isImplicitChange) {
         error[key] = {
             isError: isCheck,
@@ -19,7 +20,7 @@ export const validateFields = (isImplicitChange = false, key, isCheck, setError,
     }
 };
 
-export const numberToAlphabet = (number) => {
+export const numberToAlphabet = (number: number) => {
     const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
     const alphabetSplit = alphabet.split("");
     if (number < alphabetSplit.length) {
@@ -29,28 +30,28 @@ export const numberToAlphabet = (number) => {
     return number
 }
 
-export const convertDate = (date) => {
+export const convertDate = (date: any) => {
     if (date) {
         let dateFormat = new Date(date);
         return moment(dateFormat).format("DD-MM-YYYY hh:mm:ss");
     } return null;
 
 };
-export const convertDateOnly = (date) => {
+export const convertDateOnly = (date: any) => {
     if (date) {
         let dateFormat = new Date(date);
         return moment(dateFormat).format("DD/MM/YYYY");
     } return null;
 };
 
-export const convertTimeOnly = (date) => {
+export const convertTimeOnly = (date: string) => {
     if (date) {
         let dateFormat = new Date(date);
         return moment(dateFormat).format("hh:mm");
     } return null;
 };
 
-export const reverseConvertDate = (inputDateString) => {
+export const reverseConvertDate = (inputDateString: string) => {
     const inputDate = new Date(inputDateString);
 
     // Format the date as "Thu, 26 Oct 2023 13:05:32 GMT"
@@ -67,7 +68,7 @@ export const reverseConvertDate = (inputDateString) => {
 //     }
 // }
 
-export const convertMinutes = (minutes) => {
+export const convertMinutes = (minutes: any) => {
     const hours = Math.floor(minutes / 60);
     const remainingMinutes = minutes % 60;
     const formattedHours = String(hours).padStart(2, '0');
@@ -75,7 +76,7 @@ export const convertMinutes = (minutes) => {
     return `${formattedHours}:${formattedMinutes}`;
 }
 
-export const convertMiliSecond = (miliSecond) => {
+export const convertMiliSecond = (miliSecond: any) => {
     const minutes = Math.floor(miliSecond / 1000 / 60);
     const remainingSeconds = (miliSecond / 1000 % 60).toFixed(0);
     const hours = Math.floor(minutes / 60);
@@ -86,7 +87,7 @@ export const convertMiliSecond = (miliSecond) => {
     return `${formattedHours}:${formattedMinutes}:${formattedSeconds}`;
 }
 
-export const getCurrentDateTimeISO = (originalDate) => {
+export const getCurrentDateTimeISO = (originalDate: any) => {
     const year = originalDate.getUTCFullYear();
     const month = String(originalDate.getUTCMonth() + 1).padStart(2, '0');
     const day = String(originalDate.getUTCDate()).padStart(2, '0');
@@ -99,18 +100,18 @@ export const getCurrentDateTimeISO = (originalDate) => {
 }
 
 
-export const timeToMilliseconds = (timeString) => {
+export const timeToMilliseconds = (timeString: string) => {
     const [hours, minutes, seconds] = timeString.split(':').map(Number);
     const milliseconds = ((hours * 3600) + (minutes * 60) + seconds) * 1000;
     return milliseconds;
 }
-export const minuteToMiliSecond = (minutes) => {
+export const minuteToMiliSecond = (minutes: number) => {
     const result = minutes * 60 * 1000;
     return result;
 }
 
-export const keepLastObjectsWithUniqueIds = (array) => {
-    const idSet = {};
+export const keepLastObjectsWithUniqueIds = (array: Array<any>) => {
+    const idSet = [];
     const result = [];
 
     for (let i = array.length - 1; i >= 0; i--) {
@@ -123,32 +124,12 @@ export const keepLastObjectsWithUniqueIds = (array) => {
     return result;
 }
 
-export const checkPublishExam = (startDate, endDate) => {
-    const start = new Date(startDate);
-    const end = new Date(endDate);
-    const now = new Date()
-    if (start <= now && now <= end) {
-        return true
-    }
-    else {
-        return false
-    }
-}
 
-export const genderConfig = (gender) => {
-    if (gender = 0) {
-        return 'Nam';
+export const genderConfig = (gender: string) => {
+    if (gender == Constants.Gender.MALE.value) {
+        return Constants.Gender.MALE.label;
     }
-    else {
-        return "Nữ"
+    else if (gender == Constants.Gender.FEMALE.value) {
+        return Constants.Gender.FEMALE.label
     }
 }
-// export const configResultType = (type) => {
-//     let result = ""
-//     Constants.ResultType.List.map(it => {
-//         if (it.value == type) {
-//             result = it.label
-//         }
-//     })
-//     return result
-// }

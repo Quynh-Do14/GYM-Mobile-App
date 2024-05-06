@@ -2,7 +2,6 @@ import React, { useState } from 'react'
 import { Button, Image, KeyboardAvoidingView, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import MainLayout from '../../infrastructure/common/layouts/layout'
 import DatePicker from 'react-native-date-picker';
-import calenderIcon from '../../../assets/images/calendar-outline.png'
 import { convertDate, convertDateOnly } from '../../infrastructure/helper/helper';
 const BookingScreen = () => {
     const [fullName, setFullName] = useState("");
@@ -13,7 +12,7 @@ const BookingScreen = () => {
     const [selectedDate, setSelectedDate] = useState(new Date());
     const [showDatePicker, setShowDatePicker] = useState(false);
 
-    const handleDateChange = (newDate) => {
+    const handleDateChange = (newDate: any) => {
         setSelectedDate(newDate);
     };
 
@@ -21,7 +20,7 @@ const BookingScreen = () => {
         setShowDatePicker(true);
     };
 
-    const handleConfirm = (date) => {
+    const handleConfirm = (date: any) => {
         setSelectedDate(date);
         setShowDatePicker(false);
     };
@@ -64,7 +63,7 @@ const BookingScreen = () => {
                                             styles.fontStyle,
                                             styles.inputStyle
                                         ]}
-                                        value={convertDateOnly(selectedDate.toString())}
+                                    // value={convertDateOnly(selectedDate.toString())}
 
                                     />
                                     <TouchableOpacity
@@ -74,7 +73,7 @@ const BookingScreen = () => {
                                             right: 0,
                                             top: 10
                                         }}>
-                                        <Image source={calenderIcon} />
+                                        <Image source={require("../../../assets/images/calendar-outline.png")} />
                                     </TouchableOpacity>
                                     {showDatePicker && (
                                         <View>
@@ -85,10 +84,9 @@ const BookingScreen = () => {
                                                 onCancel={handleCancel}
                                                 onConfirm={handleConfirm}
                                                 mode="date"
-                                                textColor="#FFFFFF"
+                                                // textColor={"#FFFFFF"}
                                                 style={styles.datePicker}
                                                 confirmText={"OK"}
-                                                showConfirmButton={true}
                                             />
                                             <Button title="Chọn ngày" onPress={handleCancel} />
                                         </View>
@@ -157,28 +155,6 @@ const styles = StyleSheet.create({
         borderBottomWidth: 1,
         borderBottomColor: "#2C2C2E",
         marginBottom: 12
-    },
-    btnStyle: {
-        backgroundColor: "#D0FD3E",
-        paddingVertical: 16,
-        borderRadius: 50,
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center"
-    },
-    btnStyle: {
-        backgroundColor: "#D0FD3E",
-        paddingVertical: 16,
-        borderRadius: 50,
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center"
-    },
-    textBtnStyle: {
-        color: "#000000",
-        fontFamily: "Roboto Regular",
-        fontSize: 16,
-        fontWeight: "900",
     },
     btnStyle: {
         backgroundColor: "#D0FD3E",

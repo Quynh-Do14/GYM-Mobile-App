@@ -1,32 +1,30 @@
 import { Image, ScrollView, StyleSheet, Text, View } from "react-native";
-import card1 from "../../../assets/images/Card1.png";
-import card2 from "../../../assets/images/Card2.png";
 import MainLayout from "../../infrastructure/common/layouts/layout";
 
 const data = [
     {
-        img: card1,
+        img: "../../../assets/images/Card1.png",
         title: "Wake Up Call",
         subTitle: "04 Workouts  for Beginner"
     },
     {
-        img: card2,
+        img: "../../../assets/images/Card2.png",
         title: "Wake Up Call",
         subTitle: "07 Workouts  for Beginner"
     },
     {
-        img: card1,
+        img: "../../../assets/images/Card1.png",
         title: "Wake Up Call",
         subTitle: "04 Workouts  for Beginner"
     },
     {
-        img: card2,
+        img: '../../../assets/images/Card2.png',
         title: "Wake Up Call",
         subTitle: "07 Workouts  for Beginner"
     },
 ]
 const HomeScreen = () => {
-    
+
     return (
         <MainLayout title={"Trang chủ"}>
             <View style={styles.content}>
@@ -34,7 +32,7 @@ const HomeScreen = () => {
                     data.map((it, index) => (
                         <View key={index}>
                             <Image
-                                source={it.img}
+                                source={require("../../../assets/images/Card1.png")}
                                 style={{
                                     position: "relative",
                                     width: "100%",

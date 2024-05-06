@@ -5,7 +5,11 @@ import Infomation from './components/infomation'
 import Avatar from './components/avatar'
 import Constants from '../../core/common/constants'
 import authService from '../../infrastructure/repositories/auth/service/auth.service'
-const InfoUserScreen = ({ navigation }) => {
+import { useRecoilValue } from 'recoil'
+import { ProfileState } from '../../core/atoms/profile/profileState'
+const InfoUserScreen = ({ navigation }: any) => {
+
+    const dataProfile = useRecoilValue(ProfileState);
     const onLogOutAsync = async () => {
         try {
             await authService.logout(
@@ -44,6 +48,7 @@ const InfoUserScreen = ({ navigation }) => {
                 <Avatar />
                 <Infomation
                     navigation={navigation}
+                    dataProfile={dataProfile}
                 />
 
             </View>

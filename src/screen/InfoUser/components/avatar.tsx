@@ -1,8 +1,11 @@
 import React from 'react'
 import { Image, StyleSheet, Text, View } from 'react-native'
-import avatar from "../../../../assets/images/avatar.png"
+import { useRecoilValue } from 'recoil';
+import { ProfileState } from '../../../core/atoms/profile/profileState';
 
 const Avatar = () => {
+    const dataProfile = useRecoilValue(ProfileState);
+
     return (
         <View style={styles.headerPart}>
             <View style={[
@@ -14,8 +17,16 @@ const Avatar = () => {
                 }
             ]}>
                 <View style={styles.leftPart}>
-                    <Image source={avatar} />
-                    <Text style={styles.nameUser}>PETER</Text>
+                    <Image
+                        source={{ uri: dataProfile?.data?.avatar } || require("../../../../assets/images/avatar.png")}
+                        resizeMode={"contain"}
+                        style={{
+                            width: 100,
+                            height: 100,
+                            borderRadius: 50
+                        }}
+                    />
+                    <Text style={styles.nameUser}>{dataProfile?.data?.name}</Text>
                 </View>
             </View>
             <View style={[

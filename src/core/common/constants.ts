@@ -21,10 +21,6 @@ export default class Constants {
         static PracticeScreen = class {
             static value = "PracticeScreen"
         }
-        static HomeScreen = class {
-            static value = "HomeScreen"
-        }
-
         static Navbar = class {
             static value = "Navbar"
         }
@@ -55,13 +51,27 @@ export default class Constants {
                 label: "Chỉnh sửa thông tin"
             },
             {
-                value: 2,
+                value: "",
                 label: "Lịch đăng kí"
             },
             {
-                value: 3,
+                value: "",
                 label: "Tiến trình luyện tập"
             },
+        ]
+    }
+    static Gender = class {
+        static MALE = class {
+            static value = "MALE";
+            static label = "Nam";
+        }
+        static FEMALE = class {
+            static value = "FEMALE";
+            static label = "Nữ";
+        }
+        static List = [
+            { label: "Nam", value: "MALE" },
+            { label: "Nữ", value: "FEMALE" },
         ]
     }
 }

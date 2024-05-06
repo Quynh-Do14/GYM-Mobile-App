@@ -1,9 +1,10 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Endpoint } from "../../../../core/common/apiLink";
 import { RequestService } from "../../../utils/response";
 import { clearStorage, saveToken, setStorage } from "../../../utils/storage";
 
 class AuthService {
-    async login(data, setLoading) {
+    async login(data: object, setLoading: Function) {
         setLoading(true)
         try {
             return await RequestService
@@ -12,10 +13,9 @@ class AuthService {
                 })
                 .then(response => {
                     if (response) {
-                        saveToken({
-                            token: response.accessToken,
-                            name: response.name
-                        });
+                        saveToken(
+                            response.token,
+                        );
                     }
                     setLoading(false)
                     // SuccessMessage("Đăng nhập thành công", "")
@@ -60,7 +60,7 @@ class AuthService {
     //         setLoading(false);
     //     }
     // }
-    async logout(setLoading) {
+    async logout(setLoading: Function) {
         setLoading(true)
         try {
             // clearToken();
@@ -76,7 +76,7 @@ class AuthService {
     };
 
 
-    async register(data, setLoading) {
+    async register(data: object, setLoading: Function) {
         setLoading(true)
         try {
             return await RequestService.
@@ -97,6 +97,20 @@ class AuthService {
             // else {
             //     FailMessage("Đăng kí không thành công", "Tài khoản của bạn chưa đúng")
             // }
+            console.error(error)
+        } finally {
+            setLoading(false);
+        }
+    };
+    async profile(setLoading: Function) {
+        setLoading(true)
+        try {
+            return await RequestService.
+                get(Endpoint.Auth.Profile).then(response => {
+                    return response;
+                });
+        }
+        catch (error) {
             console.error(error)
         } finally {
             setLoading(false);

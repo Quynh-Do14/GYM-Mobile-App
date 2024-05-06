@@ -14,6 +14,7 @@ import Constants from './src/core/common/constants';
 import EditProfile from './src/screen/InfoUser/editProfile';
 import ForgotPasswordScreen from './src/screen/Auth/ForgotPassword';
 import VerifyScreen from './src/screen/Auth/Verify';
+import { RecoilRoot } from 'recoil';
 
 const Stack = createNativeStackNavigator();
 const StackNavigator = () => {
@@ -44,9 +45,11 @@ const StackNavigator = () => {
 
 function App(): React.JSX.Element {
   return (
-    <NavigationContainer>
-      <StackNavigator />
-    </NavigationContainer>
+    <RecoilRoot>
+      <NavigationContainer>
+        <StackNavigator />
+      </NavigationContainer>
+    </RecoilRoot>
   );
 }
 
