@@ -4,7 +4,7 @@ import { RequestService } from "../../../utils/response";
 import { clearStorage, saveToken, setStorage } from "../../../utils/storage";
 
 class AuthService {
-    async login(data: object, setLoading: Function) {
+    async login(data: object, setLoading: Function, setIsMessageError: Function) {
         setLoading(true)
         try {
             return await RequestService
@@ -22,7 +22,7 @@ class AuthService {
                     return response;
                 });
         } catch (error) {
-            // FailMessage("Đăng nhập không thành công", "Tài khoản của bạn chưa đúng")
+            setIsMessageError(true)
             console.error(error)
         } finally {
             setLoading(false);
@@ -65,7 +65,7 @@ class AuthService {
         try {
             // clearToken();
             clearStorage()
-            // SuccessMessage("Đăng xuất thành công", "")
+            // SuccessMessage("Đăng xuất thành công", "") 
         } catch (error) {
             console.error(error)
         } finally {
@@ -76,28 +76,20 @@ class AuthService {
     };
 
 
-    async register(data: object, setLoading: Function) {
+    async register(data: any, setLoading: Function, setIsMessageSuccess: Function, setIsMessageError: Function) {
+        console.log("data", data);
+
         setLoading(true)
         try {
             return await RequestService.
                 post(Endpoint.Auth.Signup, {
                     ...data
                 }).then(response => {
-                    // setLoading(false)
-                    // SuccessMessage("Đăng kí thành công", "Hãy xác thực Email để tham gia thi")
+                    setIsMessageSuccess(true)
                     return response;
                 });
         } catch (error) {
-            // if (error.response.data.message) {
-            //     FailMessage(messageConfig(error.response.data.message), "")
-            // }
-            // if (error.response.data.errors[0]?.defaultMessage) {
-            //     FailMessage(messageConfig(error.response.data.errors[0]?.defaultMessage), "")
-            // }
-            // else {
-            //     FailMessage("Đăng kí không thành công", "Tài khoản của bạn chưa đúng")
-            // }
-            console.error(error)
+            setIsMessageError(true)
         } finally {
             setLoading(false);
         }
@@ -112,6 +104,40 @@ class AuthService {
         }
         catch (error) {
             console.error(error)
+        } finally {
+            setLoading(false);
+        }
+    }
+
+    async updateProfile(data: object, setLoading: Function, setIsMessageSuccess: Function, setIsMessageError: Function) {
+        setLoading(true)
+        try {
+            return await RequestService.put(Endpoint.Auth.UpdateProfile,
+                { ...data }
+            ).then(response => {
+                setIsMessageSuccess(true)
+                return response;
+            });
+        }
+        catch (error) {
+            setIsMessageError(false)
+        } finally {
+            setLoading(false);
+        }
+    }
+
+    async changePassword(data: object, setLoading: Function, setIsMessageSuccess: Function, setIsMessageError: Function) {
+        setLoading(true)
+        try {
+            return await RequestService.put(Endpoint.Auth.ChangePassword,
+                { ...data }
+            ).then(response => {
+                setIsMessageSuccess(true)
+                return response;
+            });
+        }
+        catch (error) {
+            setIsMessageError(false)
         } finally {
             setLoading(false);
         }

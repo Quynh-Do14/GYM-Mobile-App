@@ -1,108 +1,140 @@
-import React, { useState } from 'react'
-import { Button, Image, KeyboardAvoidingView, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import React, { useEffect, useState } from 'react'
+import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import MainLayout from '../../infrastructure/common/layouts/layout'
-import DatePicker from 'react-native-date-picker';
-import { convertDate, convertDateOnly } from '../../infrastructure/helper/helper';
+import { useIsFocused, useNavigation } from '@react-navigation/native';
+import InputTextCommon from '../../infrastructure/common/components/input/input-text-common';
+import InputDatePickerCommon from '../../infrastructure/common/components/input/input-date-common';
+import SelectEmployeeCommon from '../../infrastructure/common/components/input/select-employee-common';
+import bookingService from '../../infrastructure/repositories/booking/service/booking.service';
+import { convertDateBooking } from '../../infrastructure/helper/helper';
+import DialogNotificationCommon from '../../infrastructure/common/components/dialog/dialogNotification';
 const BookingScreen = () => {
-    const [fullName, setFullName] = useState("");
-    const [email, setEmail] = useState("");
-    const [username, setUsername] = useState("");
-    const [password, setPassword] = useState("");
-    const [passwordConfrim, setPasswordConfrim] = useState("");
-    const [selectedDate, setSelectedDate] = useState(new Date());
-    const [showDatePicker, setShowDatePicker] = useState(false);
 
-    const handleDateChange = (newDate: any) => {
-        setSelectedDate(newDate);
+    const navigation = useNavigation<any>()
+    const [_data, _setData] = useState<any>({});
+    const [validate, setValidate] = useState<any>({});
+    const [submittedTime, setSubmittedTime] = useState<any>(null);
+    const [isMessageSuccess, setIsMessageSuccess] = useState<boolean>(false);
+    const [isMessageError, setIsMessageError] = useState<boolean>(false);
+
+    const dataBooking = _data;
+    const setDataBooking = (data: any) => {
+        Object.assign(dataBooking, { ...data });
+        _setData({ ...dataBooking });
+    };
+    const isFocused = useIsFocused();
+
+    const isValidData = () => {
+        let allRequestOK = true;
+
+        setValidate({ ...validate });
+
+        Object.values(validate).forEach((it: any) => {
+            if (it.isError === true) {
+                allRequestOK = false;
+            }
+        });
+
+        return allRequestOK;
     };
 
-    const handlePress = () => {
-        setShowDatePicker(true);
-    };
+    const onBookingAsync = async () => {
+        await setSubmittedTime(Date.now());
+        if (isValidData()) {
+            try {
+                await bookingService.Booking(
+                    {
+                        employee: {
+                            id: dataBooking.id
+                        },
+                        bookingTime: convertDateBooking(dataBooking.bookingTime),
+                        endTime: convertDateBooking(dataBooking.endTime)
+                    },
+                    () => { },
+                    setIsMessageSuccess,
+                    setIsMessageError
+                ).then((response) => {
+                    if (response) {
+                        setDataBooking({})
+                    }
+                });
+            } catch (error) {
+                console.error(error);
+            }
+        }
+    }
 
-    const handleConfirm = (date: any) => {
-        setSelectedDate(date);
-        setShowDatePicker(false);
-    };
+    useEffect(() => {
+        if (isFocused) {
+            setDataBooking({
+                bookingTime: "",
+                endTime: ""
+            })
+        }
+    }, [isFocused]);
 
-    const handleCancel = () => {
-        setShowDatePicker(false);
-    };
     return (
         <MainLayout
             title={"Đăng kí lịch tập"}
         >
             <View style={styles.content}>
-                <KeyboardAvoidingView>
-                    <ScrollView>
-                        <View>
-                            <View>
-                                <View>
-                                    <Text style={styles.labelStyle}>
-                                        Tên đăng nhập
-                                    </Text>
-                                    <TextInput
-                                        placeholder='Tên đăng nhập'
-                                        placeholderTextColor={"#ffffff"}
-                                        style={[
-                                            { position: "relative" },
-                                            styles.fontStyle,
-                                            styles.inputStyle
-                                        ]} />
-                                </View>
+                <ScrollView>
+                    <View>
+                        <InputDatePickerCommon
+                            label={"Ngày đặt"}
+                            attribute={"bookingTime"}
+                            dataAttribute={dataBooking.bookingTime}
+                            isRequired={false}
+                            setData={setDataBooking}
+                            editable={true}
+                            validate={validate}
+                            setValidate={setValidate}
+                            submittedTime={submittedTime}
+                        />
 
-                                <View>
-                                    <Text style={styles.labelStyle}>
-                                        Chọn ngày
-                                    </Text>
-                                    <TextInput
-                                        placeholder='Tên đăng nhập'
-                                        placeholderTextColor={"#ffffff"}
-                                        style={[
-                                            { position: "relative" },
-                                            styles.fontStyle,
-                                            styles.inputStyle
-                                        ]}
-                                    // value={convertDateOnly(selectedDate.toString())}
-
-                                    />
-                                    <TouchableOpacity
-                                        onPress={handlePress}
-                                        style={{
-                                            position: "absolute",
-                                            right: 0,
-                                            top: 10
-                                        }}>
-                                        <Image source={require("../../../assets/images/calendar-outline.png")} />
-                                    </TouchableOpacity>
-                                    {showDatePicker && (
-                                        <View>
-                                            <DatePicker
-                                                // modal
-                                                date={selectedDate}
-                                                onDateChange={handleDateChange}
-                                                onCancel={handleCancel}
-                                                onConfirm={handleConfirm}
-                                                mode="date"
-                                                // textColor={"#FFFFFF"}
-                                                style={styles.datePicker}
-                                                confirmText={"OK"}
-                                            />
-                                            <Button title="Chọn ngày" onPress={handleCancel} />
-                                        </View>
-                                    )}
-                                </View>
-                            </View>
-                        </View>
-                    </ScrollView>
-                </KeyboardAvoidingView>
+                        <InputDatePickerCommon
+                            label={"Ngày kết thúc"}
+                            attribute={"endTime"}
+                            dataAttribute={dataBooking.endTime}
+                            isRequired={false}
+                            setData={setDataBooking}
+                            editable={true}
+                            validate={validate}
+                            setValidate={setValidate}
+                            submittedTime={submittedTime}
+                        />
+                        <SelectEmployeeCommon
+                            label={"Chọn người hướng dẫn"}
+                            attribute={"id"}
+                            dataAttribute={dataBooking}
+                            isRequired={false}
+                            setData={setDataBooking}
+                            editable={true}
+                            validate={validate}
+                            setValidate={setValidate}
+                            submittedTime={submittedTime}
+                        />
+                    </View>
+                </ScrollView>
             </View>
             <View>
-                <TouchableOpacity style={styles.btnStyle}>
+                <TouchableOpacity
+                    style={styles.btnStyle}
+                    onPress={onBookingAsync}
+                >
                     <Text style={styles.textBtnStyle}>Đặt lịch</Text>
                 </TouchableOpacity>
             </View>
-
+            <DialogNotificationCommon
+                visible={isMessageSuccess}
+                onConfirm={() => setIsMessageSuccess(false)}
+                message={"Đặt lịch thành công"}
+            />
+            <DialogNotificationCommon
+                visible={isMessageError}
+                onConfirm={() => setIsMessageError(false)}
+                message={"Đặt lịch không thành công"}
+            />
         </MainLayout >
     )
 }

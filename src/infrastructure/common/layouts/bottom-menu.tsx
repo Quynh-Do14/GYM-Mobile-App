@@ -10,7 +10,7 @@ const BottomMenu = () => {
     return (
         <Tab.Navigator
             initialRouteName={Constants.Navigator.Navbar.value}
-            headerShown={false}
+            // headerShown={false}
             screenOptions={{
                 headerShown: false,
                 tabBarShowLabel: false,

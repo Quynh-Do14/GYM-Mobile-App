@@ -18,7 +18,7 @@ const Avatar = () => {
             ]}>
                 <View style={styles.leftPart}>
                     <Image
-                        source={{ uri: dataProfile?.data?.avatar } || require("../../../../assets/images/avatar.png")}
+                        source={dataProfile?.data?.avatar ? { uri: dataProfile?.data?.avatar } : require("../../../../assets/images/avatar.png")}
                         resizeMode={"contain"}
                         style={{
                             width: 100,

@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from 'react';
-import { TextInput, View, Text, StyleSheet, Pressable, Image } from 'react-native';
+import { TextInput, View, Text, StyleSheet, Pressable, Image, KeyboardAvoidingView } from 'react-native';
 import { validateFields } from "../../../helper/helper";
 import { MessageError } from '../controls/MessageError';
 
@@ -28,8 +28,12 @@ const InputPasswordCommon = (props: Props) => {
     const [value, setValue] = useState<string>("");
     const [showPassword, setShowPassword] = useState<boolean>(true);
     const labelLower = label?.toLowerCase();
+
+    const onBlur = (isImplicitChange: boolean = false) => {
+        validateFields(isImplicitChange, attribute, !value, setValidate, validate, !value ? `Vui lòng nhập ${labelLower}` : "")
+    }
+
     const onChange = (value: string) => {
-        let isImplicitChange
         setValue(value || "");
         setData({
             [attribute]: value || ''
@@ -42,47 +46,57 @@ const InputPasswordCommon = (props: Props) => {
 
     }, [dataAttribute]);
 
-    // useEffect(() => {
-    //     if (submittedTime != null) {
-    //         onBlur(true);
-    //     }
-    // }, [submittedTime]);
+
+    useEffect(() => {
+        if (submittedTime != null) {
+            onBlur(true);
+        }
+    }, [submittedTime]);
 
     const toggleShowPassword = () => {
         setShowPassword(!showPassword);
     };
     return (
-        <View>
-            <Text style={styles.labelStyle}>
-                {label}
-            </Text>
-            <View>
-                <TextInput
-                    placeholder={`Nhập ${labelLower}`}
-                    value={value}
-                    onChangeText={onChange}
-                    placeholderTextColor={"#ffffff75"}
-                    style={[{ position: "relative" },
-                    styles.fontStyle,
-                    styles.inputStyle,
-                    validate[attribute]?.isError && styles.errorStyle
-                    ]} />
-                <Pressable onPress={toggleShowPassword} style={styles.icon}>
-                    {
-                        showPassword
-                            ?
-                            <Image source={require("../../../../../assets/images/hide.png")} />
-                            :
-                            <Image source={require("../../../../../assets/images/open.png")} />
-                    }
-                </Pressable>
+        <KeyboardAvoidingView>
+            <View
+                style={styles.container}
+            >
+                <Text style={styles.labelStyle}>
+                    {label}
+                </Text>
+                <View>
+                    <TextInput
+                        placeholder={`Nhập ${labelLower}`}
+                        value={value}
+                        onChangeText={onChange}
+                        onBlur={() => onBlur(false)}
+                        placeholderTextColor={"#ffffff75"}
+                        secureTextEntry={showPassword}
+                        style={[{ position: "relative" },
+                        styles.fontStyle,
+                        styles.inputStyle,
+                        validate[attribute]?.isError && styles.errorStyle
+                        ]} />
+                    <Pressable onPress={toggleShowPassword} style={styles.icon}>
+                        {
+                            showPassword
+                                ?
+                                <Image source={require("../../../../../assets/images/hide.png")} />
+                                :
+                                <Image source={require("../../../../../assets/images/open.png")} />
+                        }
+                    </Pressable>
+                </View>
+                <MessageError isError={validate[attribute]?.isError || false} message={validate[attribute]?.message || ""} />
             </View>
-            <MessageError isError={validate[attribute]?.isError || false} message={validate[attribute]?.message || ""} />
-        </View>
+        </KeyboardAvoidingView>
     )
 };
 export default InputPasswordCommon;
 const styles = StyleSheet.create({
+    container: {
+        marginBottom: 12
+    },
     fontStyle: {
         color: "#FFFFFF",
         fontFamily: "Roboto Regular",

@@ -125,7 +125,9 @@ const LoginScreen = () => {
                             ?
                             <LoginTab />
                             :
-                            <RegisterTab />
+                            <RegisterTab
+                                setTabSelect={setTabSelect}
+                            />
 
                     }
 

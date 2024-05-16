@@ -7,11 +7,17 @@ import { useRecoilState } from 'recoil';
 import { useNavigation } from '@react-navigation/native';
 import InputTextCommon from '../../../infrastructure/common/components/input/input-text-common';
 import InputPasswordCommon from '../../../infrastructure/common/components/input/input-password-common';
-
-const RegisterTab = () => {
+import DialogNotificationCommon from '../../../infrastructure/common/components/dialog/dialogNotification';
+type Props = {
+    setTabSelect: Function
+}
+const RegisterTab = (props: Props) => {
+    const { setTabSelect } = props;
     const [_data, _setData] = useState<any>({});
     const [validate, setValidate] = useState<any>({});
-    const [submittedTime, setSubmittedTime] = useState();
+    const [submittedTime, setSubmittedTime] = useState<any>(null);
+    const [isMessageSuccess, setIsMessageSuccess] = useState<boolean>(false);
+    const [isMessageError, setIsMessageError] = useState<boolean>(false);
 
     const dataProfile = _data;
     const setDataProfile = (data: any) => {
@@ -19,26 +25,51 @@ const RegisterTab = () => {
         _setData({ ...dataProfile });
     };
 
-    const onSignupAsync = async () => {
-        try {
-            await authService.register(
-                {
-                    name: dataProfile.name,
-                    email: dataProfile.email,
-                    username: dataProfile.username,
-                    password: dataProfile.password,
-                    roles: ["user"],
-                },
-                () => { }
-            ).then((response) => {
-                if (response) {
-                }
-            });
-        } catch (error) {
-            console.error(error);
-        }
+    const isValidData = () => {
+        let allRequestOK = true;
+
+        setValidate({ ...validate });
+
+        Object.values(validate).forEach((it: any) => {
+            if (it.isError === true) {
+                allRequestOK = false;
+            }
+        });
+
+        return allRequestOK;
+    };
+
+    const onCloseSigunUp = () => {
+        setIsMessageSuccess(false)
+        setTabSelect(1)
+
     }
 
+    const onSignupAsync = async () => {
+
+        await setSubmittedTime(Date.now());
+        if (isValidData()) {
+            try {
+                await authService.register(
+                    {
+                        name: dataProfile.name,
+                        email: dataProfile.email,
+                        username: dataProfile.username,
+                        password: dataProfile.password,
+                        roles: ["user"],
+                    },
+                    () => { },
+                    setIsMessageSuccess,
+                    setIsMessageError
+                ).then((response) => {
+                    if (response) {
+                    }
+                });
+            } catch (error) {
+                console.error(error);
+            }
+        }
+    }
 
     return (
         <ScrollView>
@@ -50,60 +81,57 @@ const RegisterTab = () => {
                     height: "100%"
                 }
             ]}>
-                <KeyboardAvoidingView>
-                    <View
-                        style={{
-                            display: "flex",
-                            flexDirection: "column",
-                            gap: 20
-                        }}
-                    >
-                        <InputTextCommon
-                            label={"Email"}
-                            attribute={"email"}
-                            dataAttribute={dataProfile.email}
-                            isRequired={false}
-                            setData={setDataProfile}
-                            editable={true}
-                            validate={validate}
-                            setValidate={setValidate}
-                            submittedTime={submittedTime}
-                        />
-                        <InputTextCommon
-                            label={"Tên người dùng"}
-                            attribute={"name"}
-                            dataAttribute={dataProfile.name}
-                            isRequired={false}
-                            setData={setDataProfile}
-                            editable={true}
-                            validate={validate}
-                            setValidate={setValidate}
-                            submittedTime={submittedTime}
-                        />
-                        <InputTextCommon
-                            label={"Tên đăng nhập"}
-                            attribute={"username"}
-                            dataAttribute={dataProfile.username}
-                            isRequired={false}
-                            setData={setDataProfile}
-                            editable={true}
-                            validate={validate}
-                            setValidate={setValidate}
-                            submittedTime={submittedTime}
-                        />
-                        <InputPasswordCommon
-                            label={"Mật khẩu"}
-                            attribute={"password"}
-                            dataAttribute={dataProfile.password}
-                            isRequired={false}
-                            setData={setDataProfile}
-                            validate={validate}
-                            setValidate={setValidate}
-                            submittedTime={submittedTime}
-                        />
-                    </View>
-                </KeyboardAvoidingView>
-
+                <View
+                    style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        gap: 20
+                    }}
+                >
+                    <InputTextCommon
+                        label={"Email"}
+                        attribute={"email"}
+                        dataAttribute={dataProfile.email}
+                        isRequired={true}
+                        setData={setDataProfile}
+                        editable={true}
+                        validate={validate}
+                        setValidate={setValidate}
+                        submittedTime={submittedTime}
+                    />
+                    <InputTextCommon
+                        label={"Tên người dùng"}
+                        attribute={"name"}
+                        dataAttribute={dataProfile.name}
+                        isRequired={true}
+                        setData={setDataProfile}
+                        editable={true}
+                        validate={validate}
+                        setValidate={setValidate}
+                        submittedTime={submittedTime}
+                    />
+                    <InputTextCommon
+                        label={"Tên đăng nhập"}
+                        attribute={"username"}
+                        dataAttribute={dataProfile.username}
+                        isRequired={true}
+                        setData={setDataProfile}
+                        editable={true}
+                        validate={validate}
+                        setValidate={setValidate}
+                        submittedTime={submittedTime}
+                    />
+                    <InputPasswordCommon
+                        label={"Mật khẩu"}
+                        attribute={"password"}
+                        dataAttribute={dataProfile.password}
+                        isRequired={true}
+                        setData={setDataProfile}
+                        validate={validate}
+                        setValidate={setValidate}
+                        submittedTime={submittedTime}
+                    />
+                </View>
                 <TouchableOpacity
                     style={[
                         styles.btnStyle
@@ -121,6 +149,16 @@ const RegisterTab = () => {
                     </Text>
                 </TouchableOpacity>
             </View>
+            <DialogNotificationCommon
+                visible={isMessageSuccess}
+                onConfirm={onCloseSigunUp}
+                message={"Đăng kí thành công"}
+            />
+            <DialogNotificationCommon
+                visible={isMessageError}
+                onConfirm={() => setIsMessageError(false)}
+                message={"Đăng kí không thành công"}
+            />
         </ScrollView>
     )
 }

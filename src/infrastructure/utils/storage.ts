@@ -1,37 +1,39 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-export const clearToken = () => {
-  AsyncStorage.removeItem("token");
+export const clearToken = async () => {
+  await AsyncStorage.removeItem("token");
 };
-export const clearStorage = () => {
-  AsyncStorage.clear;
+export const clearStorage = async () => {
+  await AsyncStorage.clear;
 };
 
-export const isTokenStoraged = () => {
-  const token = AsyncStorage.getItem("token").then(result => {
+export const isTokenStoraged = async () => {
+  const token = await AsyncStorage.getItem("token").then(result => {
     return result
   });
+  console.log("token", token);
+
   return !!token;
 };
 
-export const getTokenStoraged = () => {
-  const token = AsyncStorage.getItem("token").then(result => {
+export const getTokenStoraged = async () => {
+  const token = await AsyncStorage.getItem("token").then(result => {
     return result
   });
   return token;
 };
 
-export const saveToken = (token: any) => {
-  AsyncStorage.setItem("token", token);
+export const saveToken = async (token: any) => {
+  await AsyncStorage.setItem("token", token);
 };
 
-export const getStorage = (data: any) => {
-  const storage = AsyncStorage.getItem(data).then(result => {
+export const getStorage = async (data: any) => {
+  const storage = await AsyncStorage.getItem(data).then(result => {
     return result
   });
   return storage;
 };
 
-export const setStorage = (key: any, value: any) => {
-  return AsyncStorage.setItem(key, value);
+export const setStorage = async (key: any, value: any) => {
+  return await AsyncStorage.setItem(key, value);
 };

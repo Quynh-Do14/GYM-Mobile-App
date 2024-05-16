@@ -42,7 +42,7 @@ const InfoUserScreen = ({ navigation }: any) => {
     return (
         <MainLayout
             title={"Hồ sơ cá nhân"}
-            isBackButton={true}
+            isBackButton={false}
         >
             <View style={styles.content}>
                 <Avatar />

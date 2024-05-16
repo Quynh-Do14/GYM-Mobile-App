@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from 'react';
-import { TextInput, View, Text, StyleSheet } from 'react-native';
+import { TextInput, View, Text, StyleSheet, KeyboardAvoidingView } from 'react-native';
 import { validateFields } from "../../../helper/helper";
 import { MessageError } from '../controls/MessageError';
 
@@ -30,6 +30,10 @@ const InputTextCommon = (props: Props) => {
     const [value, setValue] = useState<string>("");
     const labelLower = label?.toLowerCase();
 
+    const onBlur = (isImplicitChange = false) => {
+        validateFields(isImplicitChange, attribute, !value, setValidate, validate, !value ? `Vui lòng nhập ${labelLower}` : "")
+    }
+
     const onChange = (value: string) => {
         setValue(value || "");
         setData({
@@ -42,35 +46,43 @@ const InputTextCommon = (props: Props) => {
         setValue(dataAttribute || '');
     }, [dataAttribute]);
 
-    // useEffect(() => {
-    //     if (submittedTime != null) {
-    //         onBlur(true);
-    //     }
-    // }, [submittedTime]);
+    useEffect(() => {
+        if (submittedTime != null) {
+            onBlur(true);
+        }
+    }, [submittedTime]);
     return (
-        <View>
-            <Text style={styles.labelStyle}>
-                {label}
-            </Text>
-            <TextInput
-                placeholder={`Nhập ${labelLower}`}
-                value={value}
-                onChangeText={onChange}
-                placeholderTextColor={"#ffffff75"}
-                editable={editable}
-                style={[
-                    { position: "relative" },
-                    styles.fontStyle,
-                    styles.inputStyle,
-                    validate[attribute]?.isError && styles.errorStyle
+        <KeyboardAvoidingView>
+            <View
+                style={styles.container}
+            >
+                <Text style={styles.labelStyle}>
+                    {label}
+                </Text>
+                <TextInput
+                    placeholder={`Nhập ${labelLower}`}
+                    value={value}
+                    onChangeText={onChange}
+                    onBlur={() => onBlur(false)}
+                    placeholderTextColor={"#ffffff75"}
+                    editable={editable}
+                    style={[
+                        { position: "relative" },
+                        styles.fontStyle,
+                        styles.inputStyle,
+                        validate[attribute]?.isError && styles.errorStyle
 
-                ]} />
-            <MessageError isError={validate[attribute]?.isError || false} message={validate[attribute]?.message || ""} />
-        </View>
+                    ]} />
+                <MessageError isError={validate[attribute]?.isError || false} message={validate[attribute]?.message || ""} />
+            </View>
+        </KeyboardAvoidingView>
     )
 };
 export default InputTextCommon;
 const styles = StyleSheet.create({
+    container: {
+        marginBottom: 12
+    },
     fontStyle: {
         color: "#FFFFFF",
         fontFamily: "Roboto Regular",

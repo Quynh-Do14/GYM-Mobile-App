@@ -51,6 +51,29 @@ export const convertTimeOnly = (date: string) => {
     } return null;
 };
 
+export const convertDateBooking = (date: string) => {
+    if (date) {
+        let dateFormat = new Date(date);
+        return moment(dateFormat).format("YYYY-MM-DDThh:mm:ss");
+    } return null;
+};
+
+export const convertTimeParams = (date: string) => {
+    if (date) {
+        const inputDate = new Date(date);
+        const year = inputDate.getFullYear();
+        const month = inputDate.getMonth() + 1; // Tháng trong JavaScript đếm từ 0 đến 11
+        const day = inputDate.getDate();
+        const hours = inputDate.getHours();
+        const minutes = inputDate.getMinutes();
+        const seconds = inputDate.getSeconds();
+
+        // Chuyển đổi các giá trị thành chuỗi và thêm số 0 đằng trước nếu cần thiết
+        const formattedDate = `${year}-${month.toString().padStart(2, '0')}-${day.toString().padStart(2, '0')} ${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        return formattedDate
+    } return null;
+};
+
 export const reverseConvertDate = (inputDateString: string) => {
     const inputDate = new Date(inputDateString);
 

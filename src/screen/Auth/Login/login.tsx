@@ -1,19 +1,22 @@
 import { TouchableOpacity, View, KeyboardAvoidingView, ScrollView, StyleSheet, Text } from 'react-native';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Constants from '../../../core/common/constants';
 import authService from '../../../infrastructure/repositories/auth/service/auth.service';
 import { ProfileState } from '../../../core/atoms/profile/profileState';
 import { useRecoilState } from 'recoil';
-import { useNavigation } from '@react-navigation/native';
+import { useIsFocused, useNavigation } from '@react-navigation/native';
 import InputTextCommon from '../../../infrastructure/common/components/input/input-text-common';
 import InputPasswordCommon from '../../../infrastructure/common/components/input/input-password-common';
+import DialogNotificationCommon from '../../../infrastructure/common/components/dialog/dialogNotification';
 
 const LoginTab = () => {
     const navigation = useNavigation<any>()
 
     const [_data, _setData] = useState<any>({});
     const [validate, setValidate] = useState<any>({});
-    const [submittedTime, setSubmittedTime] = useState();
+    const [submittedTime, setSubmittedTime] = useState<any>(null);
+    const [isMessageError, setIsMessageError] = useState<boolean>(false);
+    const isFocused = useIsFocused();
 
     const dataProfile = _data;
     const setDataProfile = (data: any) => {
@@ -21,33 +24,61 @@ const LoginTab = () => {
         _setData({ ...dataProfile });
     };
 
+    const isValidData = () => {
+        let allRequestOK = true;
+
+        setValidate({ ...validate });
+
+        Object.values(validate).forEach((it: any) => {
+            if (it.isError === true) {
+                allRequestOK = false;
+            }
+        });
+
+        return allRequestOK;
+    };
+
     const [, setDataPosition] = useRecoilState(ProfileState);
 
     const onForgotPassword = () => {
         navigation.navigate(
-            Constants.Navigator.Auth.ForgotPasswordScreen.value,
+            Constants.Navigator.Auth.ChangePasswordScreen.value,
             {},
         )
     }
+    useEffect(() => {
+        if (isFocused) {
+        }
+    }, [isFocused]);
 
     const onLoginAsync = async () => {
-        try {
-            await authService.login(
-                {
-                    username: dataProfile.username,
-                    password: dataProfile.password,
-                },
-                () => { }
-            ).then((response) => {
-                if (response) {
-                    setDataPosition({
-                        data: response
-                    })
-                    navigation.navigate(Constants.Navigator.Navbar.value)
-                }
-            });
-        } catch (error) {
-            console.error(error);
+        await setSubmittedTime(Date.now());
+        if (isValidData()) {
+            try {
+                await authService.login(
+                    {
+                        username: dataProfile.username,
+                        password: dataProfile.password,
+                    },
+                    () => { },
+                    setIsMessageError
+                ).then((response) => {
+                    if (response) {
+                        setDataPosition({
+                            data: response
+                        })
+                        setDataProfile(
+                            {
+                                username: "",
+                                password: "",
+                            },
+                        )
+                        navigation.navigate(Constants.Navigator.Navbar.value)
+                    }
+                });
+            } catch (error) {
+                console.error(error);
+            }
         }
     }
 
@@ -61,53 +92,51 @@ const LoginTab = () => {
                     height: "100%"
                 }
             ]}>
-                <KeyboardAvoidingView>
+                <View
+                    style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        gap: 20
+                    }}
+                >
+                    <InputTextCommon
+                        label={"Tên đăng nhập"}
+                        attribute={"username"}
+                        dataAttribute={dataProfile.username}
+                        isRequired={false}
+                        setData={setDataProfile}
+                        editable={true}
+                        validate={validate}
+                        setValidate={setValidate}
+                        submittedTime={submittedTime}
+                    />
+                    <InputPasswordCommon
+                        label={"Mật khẩu"}
+                        attribute={"password"}
+                        dataAttribute={dataProfile.password}
+                        isRequired={false}
+                        setData={setDataProfile}
+                        validate={validate}
+                        setValidate={setValidate}
+                        submittedTime={submittedTime}
+                    />
                     <View
                         style={{
                             display: "flex",
-                            flexDirection: "column",
-                            gap: 20
-                        }}
-                    >
-                        <InputTextCommon
-                            label={"Tên đăng nhập"}
-                            attribute={"username"}
-                            dataAttribute={dataProfile.username}
-                            isRequired={false}
-                            setData={setDataProfile}
-                            editable={true}
-                            validate={validate}
-                            setValidate={setValidate}
-                            submittedTime={submittedTime}
-                        />
-                        <InputPasswordCommon
-                            label={"Mật khẩu"}
-                            attribute={"password"}
-                            dataAttribute={dataProfile.password}
-                            isRequired={false}
-                            setData={setDataProfile}
-                            validate={validate}
-                            setValidate={setValidate}
-                            submittedTime={submittedTime}
-                        />
-                        <View
-                            style={{
-                                display: "flex",
-                                flexDirection: "row",
-                                justifyContent: "flex-end"
-                            }}>
-                            <TouchableOpacity
-                                onPress={onForgotPassword}
-                            >
-                                <Text style={{
-                                    fontSize: 13,
-                                    fontWeight: "500",
-                                    color: "#D0FD3E"
-                                }}>Quên mật khẩu</Text>
-                            </TouchableOpacity>
-                        </View>
+                            flexDirection: "row",
+                            justifyContent: "flex-end"
+                        }}>
+                        <TouchableOpacity
+                            onPress={onForgotPassword}
+                        >
+                            <Text style={{
+                                fontSize: 13,
+                                fontWeight: "500",
+                                color: "#D0FD3E"
+                            }}>Đổi mật khẩu</Text>
+                        </TouchableOpacity>
                     </View>
-                </KeyboardAvoidingView>
+                </View>
                 <TouchableOpacity
                     style={[
                         styles.btnStyle
@@ -125,6 +154,11 @@ const LoginTab = () => {
                     </Text>
                 </TouchableOpacity>
             </View>
+            <DialogNotificationCommon
+                visible={isMessageError}
+                onConfirm={() => setIsMessageError(false)}
+                message={"Đăng nhập không thành công"}
+            />
         </ScrollView>
     )
 }

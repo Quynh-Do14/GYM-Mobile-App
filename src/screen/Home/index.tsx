@@ -1,5 +1,7 @@
 import { Image, ScrollView, StyleSheet, Text, View } from "react-native";
 import MainLayout from "../../infrastructure/common/layouts/layout";
+import { useEffect, useState } from "react";
+import packageService from "../../infrastructure/repositories/package/service/package.service";
 
 const data = [
     {
@@ -24,39 +26,61 @@ const data = [
     },
 ]
 const HomeScreen = () => {
-
+    const [packageList, setPackageList] = useState<Array<any>>([])
+    const getPackageAsync = async () => {
+        try {
+            await packageService.getPackage(
+                {
+                    page: 0,
+                    size: 10
+                },
+                () => { }
+            ).then((response) => {
+                if (response) {
+                    setPackageList(response.content)
+                }
+            })
+        } catch (error) {
+            console.error(error);
+        }
+    }
+    useEffect(() => {
+        getPackageAsync().then(() => { })
+    }, [])
     return (
         <MainLayout title={"Trang chủ"}>
-            <View style={styles.content}>
-                {
-                    data.map((it, index) => (
-                        <View key={index}>
-                            <Image
-                                source={require("../../../assets/images/Card1.png")}
-                                style={{
-                                    position: "relative",
-                                    width: "100%",
-                                    borderRadius: 20
-                                }}
-                            />
-                            <View
-                                style={styles.card}
-                            >
-                                <Text
-                                    style={styles.title}
+            <ScrollView>
+                <View style={styles.content}>
+                    {
+                        packageList.map((it, index) => (
+                            <View key={index}>
+                                <Image
+                                    source={require("../../../assets/images/Card1.png")}
+                                    style={{
+                                        position: "relative",
+                                        width: "100%",
+                                        borderRadius: 20
+                                    }}
+                                />
+                                <View
+                                    style={styles.card}
                                 >
-                                    {it.title}
-                                </Text>
-                                <Text
-                                    style={styles.subTitle}
-                                >
-                                    {it.subTitle}
-                                </Text>
+                                    <Text
+                                        style={styles.title}
+                                    >
+                                        {it.name}
+                                    </Text>
+                                    <Text
+                                        style={styles.subTitle}
+                                    >
+                                        {it.price} VNĐ
+                                    </Text>
+                                </View>
                             </View>
-                        </View>
-                    ))
-                }
-            </View>
+                        ))
+                    }
+                </View>
+            </ScrollView>
         </MainLayout>
     )
 }
