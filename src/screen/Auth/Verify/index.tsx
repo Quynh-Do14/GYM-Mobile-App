@@ -2,7 +2,10 @@ import React from 'react'
 import MainLayout from '../../../infrastructure/common/layouts/layout'
 import { KeyboardAvoidingView, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 
-const VerifyScreen = ({ navigation }) => {
+const VerifyScreen = ({ navigation }: any) => {
+    const onGoBack = () => {
+        navigation.goBack()
+    }
     return (
         <MainLayout
             title={"Xác thực tài khoản"}

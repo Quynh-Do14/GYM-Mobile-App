@@ -1,9 +1,10 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Endpoint } from "../../../../core/common/apiLink";
 import { RequestService } from "../../../utils/response";
 import { clearStorage, saveToken, setStorage } from "../../../utils/storage";
 
 class AuthService {
-    async login(data, setLoading) {
+    async login(data: object, setLoading: Function, setIsMessageError: Function) {
         setLoading(true)
         try {
             return await RequestService
@@ -12,17 +13,16 @@ class AuthService {
                 })
                 .then(response => {
                     if (response) {
-                        saveToken({
-                            token: response.accessToken,
-                            name: response.name
-                        });
+                        saveToken(
+                            response.token,
+                        );
                     }
                     setLoading(false)
                     // SuccessMessage("Đăng nhập thành công", "")
                     return response;
                 });
         } catch (error) {
-            // FailMessage("Đăng nhập không thành công", "Tài khoản của bạn chưa đúng")
+            setIsMessageError(true)
             console.error(error)
         } finally {
             setLoading(false);
@@ -60,12 +60,12 @@ class AuthService {
     //         setLoading(false);
     //     }
     // }
-    async logout(setLoading) {
+    async logout(setLoading: Function) {
         setLoading(true)
         try {
             // clearToken();
             clearStorage()
-            // SuccessMessage("Đăng xuất thành công", "")
+            // SuccessMessage("Đăng xuất thành công", "") 
         } catch (error) {
             console.error(error)
         } finally {
@@ -76,28 +76,68 @@ class AuthService {
     };
 
 
-    async register(data, setLoading) {
+    async register(data: any, setLoading: Function, setIsMessageSuccess: Function, setIsMessageError: Function) {
+        console.log("data", data);
+
         setLoading(true)
         try {
             return await RequestService.
                 post(Endpoint.Auth.Signup, {
                     ...data
                 }).then(response => {
-                    // setLoading(false)
-                    // SuccessMessage("Đăng kí thành công", "Hãy xác thực Email để tham gia thi")
+                    setIsMessageSuccess(true)
                     return response;
                 });
         } catch (error) {
-            // if (error.response.data.message) {
-            //     FailMessage(messageConfig(error.response.data.message), "")
-            // }
-            // if (error.response.data.errors[0]?.defaultMessage) {
-            //     FailMessage(messageConfig(error.response.data.errors[0]?.defaultMessage), "")
-            // }
-            // else {
-            //     FailMessage("Đăng kí không thành công", "Tài khoản của bạn chưa đúng")
-            // }
+            setIsMessageError(true)
+        } finally {
+            setLoading(false);
+        }
+    };
+    async profile(setLoading: Function) {
+        setLoading(true)
+        try {
+            return await RequestService.
+                get(Endpoint.Auth.Profile).then(response => {
+                    return response;
+                });
+        }
+        catch (error) {
             console.error(error)
+        } finally {
+            setLoading(false);
+        }
+    }
+
+    async updateProfile(data: object, setLoading: Function, setIsMessageSuccess: Function, setIsMessageError: Function) {
+        setLoading(true)
+        try {
+            return await RequestService.put(Endpoint.Auth.UpdateProfile,
+                { ...data }
+            ).then(response => {
+                setIsMessageSuccess(true)
+                return response;
+            });
+        }
+        catch (error) {
+            setIsMessageError(false)
+        } finally {
+            setLoading(false);
+        }
+    }
+
+    async changePassword(data: object, setLoading: Function, setIsMessageSuccess: Function, setIsMessageError: Function) {
+        setLoading(true)
+        try {
+            return await RequestService.put(Endpoint.Auth.ChangePassword,
+                { ...data }
+            ).then(response => {
+                setIsMessageSuccess(true)
+                return response;
+            });
+        }
+        catch (error) {
+            setIsMessageError(false)
         } finally {
             setLoading(false);
         }

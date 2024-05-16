@@ -1,10 +1,15 @@
 import React from 'react'
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import Constants from '../../../core/common/constants'
-import navigateToIcon from "../../../../assets/images/arrow-ios-back-outline.png"
-const Infomation = (props) => {
-    const { navigation } = props
-    const navigateEditProfile = (value) => {
+
+type Props = {
+    navigation: any,
+    dataProfile: any
+}
+const Infomation = (props: Props) => {
+    const { navigation, dataProfile } = props
+    
+    const navigateEditProfile = (value: string) => {
         navigation.navigate(
             value
         )
@@ -18,7 +23,7 @@ const Infomation = (props) => {
                             <View key={index}>
                                 <TouchableOpacity onPress={() => navigateEditProfile(it.value)} style={styles.touchContent}>
                                     <Text style={styles.labelTouch}>{it.label}</Text>
-                                    <Image source={navigateToIcon} style={{
+                                    <Image source={require("../../../../assets/images/arrow-ios-back-outline.png")} style={{
                                         transform: [{ scaleX: -1 }],
                                     }} />
                                 </TouchableOpacity>

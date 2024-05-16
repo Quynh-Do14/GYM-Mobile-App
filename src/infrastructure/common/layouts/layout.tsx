@@ -1,14 +1,32 @@
-import React from 'react'
-import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import backArrow from "../../../../assets/images/arrow-ios-back-outline.png"
-import { PropTypes } from "prop-types";
+import { useRecoilState } from 'recoil';
+import { ProfileState } from '../../../core/atoms/profile/profileState';
+import authService from '../../repositories/auth/service/auth.service'
+import { getTokenStoraged, isTokenStoraged } from '../../utils/storage';
+import React, { useEffect } from 'react'
+import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const MainLayout = (props) => {
-    const {
-        title,
-        isBackButton = false,
-        onGoBack
-    } = props;
+const MainLayout = ({ onGoBack, isBackButton = false, title, ...props }: any) => {
+    const [, setDataPosition] = useRecoilState(ProfileState);
+
+    const getProfileUser = async () => {
+        try {
+            await authService.profile(
+                () => { }
+            ).then((response) => {
+                if (response) {
+                    setDataPosition({
+                        data: response
+                    })
+                }
+            })
+        } catch (error) {
+            console.error(error);
+        }
+    }
+    useEffect(() => {
+        getProfileUser().then(() => { })
+    }, [])
     return (
         <View style={styles.container}>
             <View style={styles.header}>
@@ -18,7 +36,7 @@ const MainLayout = (props) => {
                     >
                         {isBackButton &&
                             <View  >
-                                <Image source={backArrow} />
+                                <Image source={require("../../../../assets/images/arrow-ios-back-outline.png")} />
                             </View>
                         }
                     </TouchableOpacity>
@@ -33,11 +51,7 @@ const MainLayout = (props) => {
         </View >
     )
 }
-MainLayout.propTypes = {
-    title: PropTypes.string,
-    isBackButton: PropTypes.bool,
-    onGoBack: PropTypes.func
-}
+
 export default MainLayout
 
 const styles = StyleSheet.create({

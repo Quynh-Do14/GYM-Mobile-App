@@ -21,10 +21,6 @@ export default class Constants {
         static PracticeScreen = class {
             static value = "PracticeScreen"
         }
-        static HomeScreen = class {
-            static value = "HomeScreen"
-        }
-
         static Navbar = class {
             static value = "Navbar"
         }
@@ -33,6 +29,12 @@ export default class Constants {
             static EditProfile = class {
                 static value = "EditProfile"
             }
+            static BookingSchedule = class {
+                static value = "BookingSchedule"
+            }
+            static WorkoutSessions = class {
+                static value = "WorkoutSessions"
+            }
         }
         static Auth = class {
             static LoginScreen = class {
@@ -40,6 +42,9 @@ export default class Constants {
             }
             static ForgotPasswordScreen = class {
                 static value = "ForgotPasswordScreen"
+            }
+            static ChangePasswordScreen = class {
+                static value = "ChangePasswordScreen"
             }
             static VerifyScreen = class {
                 static value = "VerifyScreen"
@@ -55,13 +60,27 @@ export default class Constants {
                 label: "Chỉnh sửa thông tin"
             },
             {
-                value: 2,
+                value: "BookingSchedule",
                 label: "Lịch đăng kí"
             },
             {
-                value: 3,
+                value: "WorkoutSessions",
                 label: "Tiến trình luyện tập"
             },
+        ]
+    }
+    static Gender = class {
+        static MALE = class {
+            static value = "MALE";
+            static label = "Nam";
+        }
+        static FEMALE = class {
+            static value = "FEMALE";
+            static label = "Nữ";
+        }
+        static List = [
+            { label: "Nam", value: "MALE" },
+            { label: "Nữ", value: "FEMALE" },
         ]
     }
 }
