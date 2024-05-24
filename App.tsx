@@ -20,10 +20,11 @@ import { isTokenStoraged } from './src/infrastructure/utils/storage';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import ChangePasswordScreen from './src/screen/Auth/ChangePassword';
 import WorkoutSessions from './src/screen/InfoUser/working';
+import DetailBranch from './src/screen/Home/branch/detailBranch';
 
 const Stack = createNativeStackNavigator();
 const StackNavigator = () => {
-  const [token, setToken] = useState<any>()
+  const [token, setToken] = useState<string>("")
   const getTokenStoraged = async () => {
     const token = await AsyncStorage.getItem("token").then(result => {
       if (result) {
@@ -35,11 +36,10 @@ const StackNavigator = () => {
   useEffect(() => {
     getTokenStoraged().then(() => { })
   }, [])
-  console.log("token", token);
 
   return (
     <Stack.Navigator
-      initialRouteName={Constants.Navigator.Auth.LoginScreen.value}
+      initialRouteName={`${token && (token ? Constants.Navigator.Navbar.value : Constants.Navigator.Auth.LoginScreen.value)}`}
       screenOptions={{ headerShown: false }}
     >
       <Stack.Screen
@@ -54,6 +54,8 @@ const StackNavigator = () => {
       <Stack.Screen name={Constants.Navigator.Auth.ForgotPasswordScreen.value} component={ForgotPasswordScreen} />
       <Stack.Screen name={Constants.Navigator.Auth.ChangePasswordScreen.value} component={ChangePasswordScreen} />
       <Stack.Screen name={Constants.Navigator.Auth.VerifyScreen.value} component={VerifyScreen} />
+
+      <Stack.Screen name={Constants.Navigator.HomeScreen.DetailBranch.value} component={DetailBranch} />
     </Stack.Navigator>
   );
 };

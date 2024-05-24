@@ -20,4 +20,8 @@ export class Endpoint {
     static Package = class {
         static getPackage = "/packages"
     }
+    static Branch = class {
+        static getBranch = "/gym-branches"
+        static getBranchById = "/gym-branches/admin"
+    }
 };

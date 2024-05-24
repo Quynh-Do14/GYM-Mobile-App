@@ -1,12 +1,12 @@
 import { useRecoilState } from 'recoil';
 import { ProfileState } from '../../../core/atoms/profile/profileState';
 import authService from '../../repositories/auth/service/auth.service'
-import { getTokenStoraged, isTokenStoraged } from '../../utils/storage';
 import React, { useEffect } from 'react'
-import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Dimensions, Image, ImageBackground, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 
-const MainLayout = ({ onGoBack, isBackButton = false, title, ...props }: any) => {
+const { width: viewportWidth } = Dimensions.get('window');
+
+const MainLayout = ({ onGoBack, isBackButton = false, title, bgImg = "", ...props }: any) => {
     const [, setDataPosition] = useRecoilState(ProfileState);
 
     const getProfileUser = async () => {
@@ -28,25 +28,69 @@ const MainLayout = ({ onGoBack, isBackButton = false, title, ...props }: any) =>
         getProfileUser().then(() => { })
     }, [])
     return (
-        <View style={styles.container}>
-            <View style={styles.header}>
-                <View style={styles.flex1} >
-                    <TouchableOpacity
-                        onPress={onGoBack}
-                    >
-                        {isBackButton &&
-                            <View  >
-                                <Image source={require("../../../../assets/images/arrow-ios-back-outline.png")} />
-                            </View>
-                        }
-                    </TouchableOpacity>
-                </View>
-                <View style={styles.flex2}>
-                    <Text style={styles.textTitle}>{title}</Text>
-                </View>
-                <View style={styles.flex1}>
-                </View>
-            </View>
+        <View style={[
+            styles.container,
+            {
+                paddingHorizontal: bgImg ? 0 : 20,
+                paddingTop: bgImg ? 0 : 20
+            }
+        ]}>
+            {
+                bgImg
+                    ?
+                    <ImageBackground
+                        source={bgImg}
+                        style={[
+                            styles.header,
+                            {
+                                width: viewportWidth,
+                                height: 200,
+                                paddingHorizontal: 20,
+                                paddingTop: 20,
+                                display: "flex",
+                                flexDirection: "row",
+                                alignItems: "flex-start",
+                                justifyContent: "space-between",
+                                marginBottom: 20,
+                            }
+                        ]}>
+                        <View style={styles.flex1} >
+                            <TouchableOpacity
+                                onPress={onGoBack}
+                            >
+                                {isBackButton &&
+                                    <View  >
+                                        <Image source={require("../../../../assets/images/arrow-ios-back-outline.png")} />
+                                    </View>
+                                }
+                            </TouchableOpacity>
+                        </View>
+                        <View style={styles.flex2}>
+                            <Text style={styles.textTitle}>{title}</Text>
+                        </View>
+                        <View style={styles.flex1}>
+                        </View>
+                    </ImageBackground>
+                    :
+                    <View style={styles.header}>
+                        <View style={styles.flex1} >
+                            <TouchableOpacity
+                                onPress={onGoBack}
+                            >
+                                {isBackButton &&
+                                    <View  >
+                                        <Image source={require("../../../../assets/images/arrow-ios-back-outline.png")} />
+                                    </View>
+                                }
+                            </TouchableOpacity>
+                        </View>
+                        <View style={styles.flex2}>
+                            <Text style={styles.textTitle}>{title}</Text>
+                        </View>
+                        <View style={styles.flex1}>
+                        </View>
+                    </View>
+            }
             {props.children}
         </View >
     )
@@ -57,9 +101,9 @@ export default MainLayout
 const styles = StyleSheet.create({
     container: {
         backgroundColor: "#1C1C1E",
-        paddingHorizontal: 24,
+        paddingHorizontal: 20,
         paddingVertical: 20,
-        flex: 1
+        flex: 1,
     },
     content: {
         flex: 1
