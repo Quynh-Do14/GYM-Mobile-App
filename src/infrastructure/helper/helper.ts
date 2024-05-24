@@ -147,7 +147,6 @@ export const keepLastObjectsWithUniqueIds = (array: Array<any>) => {
     return result;
 }
 
-
 export const genderConfig = (gender: string) => {
     if (gender == Constants.Gender.MALE.value) {
         return Constants.Gender.MALE.label;
@@ -155,4 +154,9 @@ export const genderConfig = (gender: string) => {
     else if (gender == Constants.Gender.FEMALE.value) {
         return Constants.Gender.FEMALE.label
     }
+}
+
+export const formatCurrencyVND = (amount: string) => {
+    let formattedAmount = amount.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+    return `${formattedAmount} ₫`;
 }

@@ -14,6 +14,9 @@ export default class Constants {
     static Navigator = class {
         static HomeScreen = class {
             static value = "HomeScreen"
+            static DetailBranch = class {
+                static value = "DetailBranch"
+            }
         }
         static BookingScreen = class {
             static value = "BookingScreen"
