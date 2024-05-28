@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { Alert, Linking, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import MainLayout from '../../infrastructure/common/layouts/layout'
 import { useIsFocused, useNavigation } from '@react-navigation/native';
 import InputTextCommon from '../../infrastructure/common/components/input/input-text-common';
@@ -8,6 +8,7 @@ import SelectEmployeeCommon from '../../infrastructure/common/components/input/s
 import bookingService from '../../infrastructure/repositories/booking/service/booking.service';
 import { convertDateBooking } from '../../infrastructure/helper/helper';
 import DialogNotificationCommon from '../../infrastructure/common/components/dialog/dialogNotification';
+import LoadingFullScreen from '../../infrastructure/common/components/controls/loading';
 const BookingScreen = () => {
 
     const navigation = useNavigation<any>()
@@ -16,6 +17,7 @@ const BookingScreen = () => {
     const [submittedTime, setSubmittedTime] = useState<any>(null);
     const [isMessageSuccess, setIsMessageSuccess] = useState<boolean>(false);
     const [isMessageError, setIsMessageError] = useState<boolean>(false);
+    const [loading, setLoading] = useState<boolean>(false);
 
     const dataBooking = _data;
     const setDataBooking = (data: any) => {
@@ -50,25 +52,51 @@ const BookingScreen = () => {
                         bookingTime: convertDateBooking(dataBooking.bookingTime),
                         endTime: convertDateBooking(dataBooking.endTime)
                     },
+                    setLoading,
                     () => { },
-                    setIsMessageSuccess,
-                    setIsMessageError
-                ).then((response) => {
-                    if (response) {
+                    () => { }
+                    // setIsMessageSuccess,
+                    // setIsMessageError
+                ).then(async (response) => {
+                    if (response.url) {
+                        const supported = await Linking.canOpenURL(response.url);
+                        if (supported) {
+                            await Linking.openURL(response.url);
+                            Alert.alert(`Đăng kí lịch tập thành công`);
+                        } else {
+                            Alert.alert(`Không thể mở đến trang VNPay`);
+                        }
+
                         setDataBooking({})
                     }
                 });
             } catch (error) {
                 console.error(error);
+                Alert.alert(`Đăng kí lịch tập không thành công`);
             }
         }
     }
+
+
+    const onBookingConfirm = async () => {
+
+        Alert.alert('Đăng ký lịch tập', 'Bạn muốn đăng ký thành viên?', [
+            {
+                text: 'Hủy',
+                style: 'cancel',
+            },
+            {
+                text: 'Đăng ký', onPress: onBookingAsync,
+            }
+        ]);
+    };
 
     useEffect(() => {
         if (isFocused) {
             setDataBooking({
                 bookingTime: "",
-                endTime: ""
+                endTime: "",
+                id: ""
             })
         }
     }, [isFocused]);
@@ -120,7 +148,7 @@ const BookingScreen = () => {
             <View>
                 <TouchableOpacity
                     style={styles.btnStyle}
-                    onPress={onBookingAsync}
+                    onPress={onBookingConfirm}
                 >
                     <Text style={styles.textBtnStyle}>Đặt lịch</Text>
                 </TouchableOpacity>
@@ -135,6 +163,7 @@ const BookingScreen = () => {
                 onConfirm={() => setIsMessageError(false)}
                 message={"Đặt lịch không thành công"}
             />
+            <LoadingFullScreen loading={loading} />
         </MainLayout >
     )
 }

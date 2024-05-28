@@ -8,14 +8,18 @@ import { useIsFocused, useNavigation } from '@react-navigation/native';
 import InputTextCommon from '../../../infrastructure/common/components/input/input-text-common';
 import InputPasswordCommon from '../../../infrastructure/common/components/input/input-password-common';
 import DialogNotificationCommon from '../../../infrastructure/common/components/dialog/dialogNotification';
-
-const LoginTab = () => {
+import LoadingFullScreen from '../../../infrastructure/common/components/controls/loading';
+type Props = {
+    setLoading: Function
+}
+const LoginTab = (props: Props) => {
+    const { setLoading } = props;
     const navigation = useNavigation<any>()
 
     const [_data, _setData] = useState<any>({});
     const [validate, setValidate] = useState<any>({});
     const [submittedTime, setSubmittedTime] = useState<any>(null);
-    const [isMessageError, setIsMessageError] = useState<boolean>(false);
+
     const isFocused = useIsFocused();
 
     const dataProfile = _data;
@@ -60,8 +64,7 @@ const LoginTab = () => {
                         username: dataProfile.username,
                         password: dataProfile.password,
                     },
-                    () => { },
-                    setIsMessageError
+                    setLoading,
                 ).then((response) => {
                     if (response) {
                         setDataPosition({
@@ -154,11 +157,6 @@ const LoginTab = () => {
                     </Text>
                 </TouchableOpacity>
             </View>
-            <DialogNotificationCommon
-                visible={isMessageError}
-                onConfirm={() => setIsMessageError(false)}
-                message={"Đăng nhập không thành công"}
-            />
         </ScrollView>
     )
 }

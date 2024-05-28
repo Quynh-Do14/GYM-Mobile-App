@@ -2,9 +2,11 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Endpoint } from "../../../../core/common/apiLink";
 import { RequestService } from "../../../utils/response";
 import { clearStorage, saveToken, setStorage } from "../../../utils/storage";
+import { Alert } from "react-native";
+import { messageConfig } from "../../../../infrastructure/helper/message";
 
 class AuthService {
-    async login(data: object, setLoading: Function, setIsMessageError: Function) {
+    async login(data: object, setLoading: Function) {
         setLoading(true)
         try {
             return await RequestService
@@ -20,37 +22,37 @@ class AuthService {
                     setLoading(false)
                     return response;
                 });
-        } catch (error) {
-            setIsMessageError(true)
-            console.error(error)
+        } catch (error: any) {
+            Alert.alert(`Đăng nhập không thành công`, messageConfig(error.response.data.message));
+            console.log(error)
         } finally {
             setLoading(false);
         }
     }
- 
+
     async logout(setLoading: Function) {
         setLoading(true)
         try {
             clearStorage()
         } catch (error) {
-            console.error(error)
+            console.log(error)
         } finally {
             setLoading(false)
         };
     };
 
-    async register(data: any, setLoading: Function, setIsMessageSuccess: Function, setIsMessageError: Function) {
+    async register(data: any, setLoading: Function) {
         setLoading(true)
         try {
             return await RequestService.
                 post(Endpoint.Auth.Signup, {
                     ...data
                 }).then(response => {
-                    setIsMessageSuccess(true)
+                    Alert.alert(`Đăng kí thành công`);
                     return response;
                 });
-        } catch (error) {
-            setIsMessageError(true)
+        } catch (error: any) {
+            Alert.alert(`Đăng kí không thành công`, messageConfig(error.response.data.message));
         } finally {
             setLoading(false);
         }
@@ -64,42 +66,42 @@ class AuthService {
                 });
         }
         catch (error) {
-            console.error(error)
+            console.log(error)
         } finally {
             setLoading(false);
         }
     }
 
-    async updateProfile(data: object, setLoading: Function, setIsMessageSuccess: Function, setIsMessageError: Function) {
+    async updateProfile(data: object, setLoading: Function) {
         setLoading(true)
         try {
             return await RequestService.putForm(Endpoint.Auth.UpdateProfile,
                 { ...data }
             ).then(response => {
-                setIsMessageSuccess(true)
+                Alert.alert(`Cập nhật thành công`);
                 return response;
             });
         }
-        catch (error) {
-            console.error(error)
-            setIsMessageError(false)
+        catch (error: any) {
+            console.log(error)
+            Alert.alert(`Cập nhật không thành công`, messageConfig(error.response.data.message));
         } finally {
             setLoading(false);
         }
     }
 
-    async changePassword(data: object, setLoading: Function, setIsMessageSuccess: Function, setIsMessageError: Function) {
+    async changePassword(data: object, setLoading: Function) {
         setLoading(true)
         try {
             return await RequestService.put(Endpoint.Auth.ChangePassword,
                 { ...data }
             ).then(response => {
-                setIsMessageSuccess(true)
+                Alert.alert(`Đổi mật khẩu thành công`);
                 return response;
             });
         }
-        catch (error) {
-            setIsMessageError(false)
+        catch (error: any) {
+            Alert.alert(`Đổi mật khẩu không thành công`, messageConfig(error.response.data.message));
         } finally {
             setLoading(false);
         }
@@ -118,7 +120,7 @@ class AuthService {
     //     }
     //     catch (error) {
     //         FailMessage("Xác thực không thành công", "")
-    //         console.error(error)
+    //         console.log(error)
     //     } finally {
     //         setLoading(false);
     //         callBack()
@@ -139,7 +141,7 @@ class AuthService {
     //         });
     //     } catch (error) {
     //         FailMessage("Gửi Email không thành công", "Kiểm tra lại thông tin Email")
-    //         console.error(error)
+    //         console.log(error)
     //     } finally {
     //         setLoading(false);
     //     }
@@ -158,7 +160,7 @@ class AuthService {
     //         });
     //     } catch (error) {
     //         FailMessage("Thay đổi mật khẩu không thành công", "Kiểm tra lại thông tin")
-    //         console.error(error)
+    //         console.log(error)
     //         setIsSuccessDialog(false)
     //     } finally {
     //         setLoading(false);

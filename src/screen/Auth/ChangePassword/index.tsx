@@ -5,6 +5,7 @@ import { useIsFocused } from '@react-navigation/native'
 import InputPasswordCommon from '../../../infrastructure/common/components/input/input-password-common'
 import authService from '../../../infrastructure/repositories/auth/service/auth.service'
 import DialogNotificationCommon from '../../../infrastructure/common/components/dialog/dialogNotification'
+import LoadingFullScreen from '../../../infrastructure/common/components/controls/loading'
 
 const ChangePasswordScreen = ({ navigation }: any) => {
     const onGoBack = () => {
@@ -16,6 +17,7 @@ const ChangePasswordScreen = ({ navigation }: any) => {
     const isFocused = useIsFocused();
     const [isMessageSuccess, setIsMessageSuccess] = useState<boolean>(false);
     const [isMessageError, setIsMessageError] = useState<boolean>(false);
+    const [loading, setLoading] = useState<boolean>(false);
 
     const dataProfile = _data;
     const setDataProfile = (data: any) => {
@@ -43,13 +45,12 @@ const ChangePasswordScreen = ({ navigation }: any) => {
             try {
                 await authService.changePassword(
                     {
-                        // oldPassword: dataProfile.oldPassword,
+                        oldPassword: dataProfile.oldPassword,
                         password: dataProfile.newPassword,
-                        // confirmPassword: dataProfile.confirmPassword,
+                        confirmPassword: dataProfile.confirmPassword,
                     },
-                    () => { },
-                    setIsMessageSuccess,
-                    setIsMessageError,
+                    setLoading,
+
                 ).then((response) => {
                     if (response) {
                         onGoBack()
@@ -96,7 +97,7 @@ const ChangePasswordScreen = ({ navigation }: any) => {
 
                 <View>
                     <KeyboardAvoidingView>
-                        {/* <InputPasswordCommon
+                        <InputPasswordCommon
                             label={"Mật khẩu cũ"}
                             attribute={"oldPassword"}
                             dataAttribute={dataProfile.oldPassword}
@@ -105,7 +106,7 @@ const ChangePasswordScreen = ({ navigation }: any) => {
                             validate={validate}
                             setValidate={setValidate}
                             submittedTime={submittedTime}
-                        /> */}
+                        />
                         <InputPasswordCommon
                             label={"Mật khẩu mới"}
                             attribute={"newPassword"}
@@ -116,7 +117,7 @@ const ChangePasswordScreen = ({ navigation }: any) => {
                             setValidate={setValidate}
                             submittedTime={submittedTime}
                         />
-                        {/* <InputPasswordCommon
+                        <InputPasswordCommon
                             label={"Xác nhận mật khẩu"}
                             attribute={"confirmPassword"}
                             dataAttribute={dataProfile.confirmPassword}
@@ -125,7 +126,7 @@ const ChangePasswordScreen = ({ navigation }: any) => {
                             validate={validate}
                             setValidate={setValidate}
                             submittedTime={submittedTime}
-                        /> */}
+                        />
                     </KeyboardAvoidingView>
                     <TouchableOpacity onPress={onGoBack}>
                         <Text style={styles.fontStyleBack}>
@@ -143,16 +144,7 @@ const ChangePasswordScreen = ({ navigation }: any) => {
                     <Text style={styles.textBtnStyle}>Cập nhập</Text>
                 </TouchableOpacity>
             </View>
-            <DialogNotificationCommon
-                visible={isMessageSuccess}
-                onConfirm={() => setIsMessageSuccess(false)}
-                message={"Cập nhật thành công"}
-            />
-            <DialogNotificationCommon
-                visible={isMessageError}
-                onConfirm={() => setIsMessageError(false)}
-                message={"Cập nhật không thành công"}
-            />
+            <LoadingFullScreen loading={loading} />
         </MainLayout>
     )
 }

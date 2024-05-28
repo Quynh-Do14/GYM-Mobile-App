@@ -33,9 +33,11 @@ const EditProfile = () => {
         if (dataProfile) {
             setDataProfile({
                 avatar: detailUser.avatar,
-                username: detailUser?.user?.username,
-                email: detailUser?.user?.email,
+                username: detailUser?.username,
+                email: detailUser?.email,
                 name: detailUser.name,
+                address: detailUser.address,
+                phone: detailUser.phone,
                 cccd: detailUser.cccd,
                 sex: detailUser.sex,
             });
@@ -78,7 +80,8 @@ const EditProfile = () => {
     }
     useEffect(() => {
         getProfileUser().then(() => { })
-    }, [])
+    }, []);
+    console.log("dataProfile", dataProfile);
 
     const onUpdateProfile = async () => {
         await setSubmittedTime(Date.now());
@@ -89,10 +92,11 @@ const EditProfile = () => {
                         name: dataProfile.name,
                         username: dataProfile.username,
                         email: dataProfile.email,
+                        address: dataProfile.address,
+                        phone: dataProfile.phone,
+                        cccd: dataProfile.cccd,
                     },
                     setLoading,
-                    setIsMessageSuccess,
-                    setIsMessageError,
                 ).then((response) => {
                     if (response) {
                         getProfileUser().then(() => { })
@@ -160,7 +164,29 @@ const EditProfile = () => {
                                 submittedTime={submittedTime}
                             />
                             <InputTextCommon
-                                label={"CCCD"}
+                                label={"Địa chỉ"}
+                                attribute={"address"}
+                                dataAttribute={dataProfile.address}
+                                isRequired={false}
+                                setData={setDataProfile}
+                                editable={true}
+                                validate={validate}
+                                setValidate={setValidate}
+                                submittedTime={submittedTime}
+                            />
+                            <InputTextCommon
+                                label={"SĐT"}
+                                attribute={"phone"}
+                                dataAttribute={dataProfile.phone}
+                                isRequired={false}
+                                setData={setDataProfile}
+                                editable={true}
+                                validate={validate}
+                                setValidate={setValidate}
+                                submittedTime={submittedTime}
+                            />
+                            <InputTextCommon
+                                label={"Căn cước công dân"}
                                 attribute={"cccd"}
                                 dataAttribute={dataProfile.cccd}
                                 isRequired={false}
@@ -170,7 +196,7 @@ const EditProfile = () => {
                                 setValidate={setValidate}
                                 submittedTime={submittedTime}
                             />
-                            <SelectCommon
+                            {/* <SelectCommon
                                 label={"Giới tính"}
                                 attribute={"sex"}
                                 dataAttribute={dataProfile.sex}
@@ -180,7 +206,7 @@ const EditProfile = () => {
                                 setValidate={setValidate}
                                 submittedTime={submittedTime}
                                 listArray={Constants.Gender.List}
-                            />
+                            /> */}
                         </View>
                     </View>
                 </ScrollView>
@@ -193,16 +219,6 @@ const EditProfile = () => {
                     <Text style={styles.textBtnStyle}>Cập nhập</Text>
                 </TouchableOpacity>
             </View>
-            <DialogNotificationCommon
-                visible={isMessageSuccess}
-                onConfirm={() => setIsMessageSuccess(false)}
-                message={"Cập nhật thành công"}
-            />
-            <DialogNotificationCommon
-                visible={isMessageError}
-                onConfirm={() => setIsMessageError(false)}
-                message={"Cập nhật không thành công"}
-            />
             <LoadingFullScreen loading={loading} />
         </MainLayout >
 

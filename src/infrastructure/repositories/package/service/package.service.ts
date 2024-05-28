@@ -46,6 +46,23 @@ class PackageService {
             setLoading(false);
         }
     }
+    async addPackage(data: object, setLoading: Function) {
+        setLoading(true)
+
+        try {
+            return await RequestService.
+                post(Endpoint.Package.addPackage,
+                    data
+                ).then(response => {
+                    return response;
+                });
+        }
+        catch (error) {
+            console.error(error)
+        } finally {
+            setLoading(false);
+        }
+    }
 }
 
 export default new PackageService();

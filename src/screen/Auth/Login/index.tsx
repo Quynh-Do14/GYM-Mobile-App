@@ -3,9 +3,11 @@ import { useState } from 'react';
 import Constants from '../../../core/common/constants';
 import LoginTab from './login';
 import RegisterTab from './register';
+import LoadingFullScreen from '../../../infrastructure/common/components/controls/loading';
 const LoginScreen = () => {
     const [tabSelect, setTabSelect] = useState(1)
     const [rotation,] = useState(new Animated.Value(0));
+    const [loading, setLoading] = useState<boolean>(false);
 
     const onChangeTab = (value: number) => {
         Animated.timing(rotation, {
@@ -123,9 +125,12 @@ const LoginScreen = () => {
                     {
                         tabSelect == 1
                             ?
-                            <LoginTab />
+                            <LoginTab
+                                setLoading={setLoading}
+                            />
                             :
                             <RegisterTab
+                                setLoading={setLoading}
                                 setTabSelect={setTabSelect}
                             />
 
@@ -134,6 +139,7 @@ const LoginScreen = () => {
                 </Animated.View>
 
             </View>
+            <LoadingFullScreen loading={loading} />
         </View>
 
     )

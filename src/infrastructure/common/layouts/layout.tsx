@@ -1,32 +1,51 @@
 import { useRecoilState } from 'recoil';
 import { ProfileState } from '../../../core/atoms/profile/profileState';
 import authService from '../../repositories/auth/service/auth.service'
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Dimensions, Image, ImageBackground, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const { width: viewportWidth } = Dimensions.get('window');
 
-const MainLayout = ({ onGoBack, isBackButton = false, title, bgImg , ...props }: any) => {
+const MainLayout = ({ onGoBack, isBackButton = false, title, bgImg, ...props }: any) => {
     const [, setDataPosition] = useRecoilState(ProfileState);
+    const [token, setToken] = useState<string>("");
+
+    const getTokenStoraged = async () => {
+        const token = await AsyncStorage.getItem("token").then(result => {
+            if (result) {
+                setToken(result)
+            }
+        });
+        return token;
+    };
+    useEffect(() => {
+        getTokenStoraged().then(() => { })
+    }, [])
 
     const getProfileUser = async () => {
-        try {
-            await authService.profile(
-                () => { }
-            ).then((response) => {
-                if (response) {
-                    setDataPosition({
-                        data: response
-                    })
-                }
-            })
-        } catch (error) {
-            console.error(error);
+        if (token) {
+            try {
+                await authService.profile(
+                    () => { }
+                ).then((response) => {
+                    if (response) {
+                        setDataPosition({
+                            data: response
+                        })
+                    }
+                })
+            } catch (error) {
+                console.error(error);
+            }
         }
     }
+    
     useEffect(() => {
-        getProfileUser().then(() => { })
-    }, [])
+        if (token) {
+            getProfileUser().then(() => { })
+        }
+    }, [token])
     return (
         <View style={[
             styles.container,

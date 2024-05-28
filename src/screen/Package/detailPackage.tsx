@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import MainLayout from "../../infrastructure/common/layouts/layout";
 import { useNavigation } from '@react-navigation/native';
 import { useRecoilValue } from 'recoil';
@@ -6,11 +6,12 @@ import { Alert, Dimensions, Pressable, ScrollView, StyleSheet, Text, View } from
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Entypo from 'react-native-vector-icons/Entypo';
 import LoadingFullScreen from '../../infrastructure/common/components/controls/loading';
-import { arrayBufferToBase64, formatCurrencyVND } from '../../infrastructure/helper/helper';
+import { arrayBufferToBase64, convertDateBooking, formatCurrencyVND } from '../../infrastructure/helper/helper';
 import { ProfileState } from '../../core/atoms/profile/profileState';
 import packageService from '../../infrastructure/repositories/package/service/package.service';
 import { PackageState } from '../../core/atoms/package/packageState';
 import Foundation from 'react-native-vector-icons/Foundation';
+import { Linking } from 'react-native';
 
 const { width: viewportWidth } = Dimensions.get('window');
 const { height: viewportHeight } = Dimensions.get('window');
@@ -22,6 +23,7 @@ const DetailPackageScreen = () => {
     const profileState = useRecoilValue(ProfileState).data;
 
     const [loading, setLoading] = useState<boolean>(false);
+    const [isRegister, setIsRegister] = useState<boolean>(false);
 
     const onGoBack = () => {
         navigation.goBack();
@@ -45,38 +47,56 @@ const DetailPackageScreen = () => {
         getBranchByIdAsync().then(() => { })
     }, []);
 
-    // const onRegisterBranchAsync = async () => {
-    //     try {
-    //         await authService.updateProfile(
-    //             {
-    //                 gymBranch: Number(packageState.id),
-    //             },
-    //             setLoading,
-    //             // setIsMessageSuccess,
-    //             // setIsMessageError,
-    //             () => { },
-    //             () => { },
-    //         ).then((response) => {
-    //             if (response) {
-    //                 getBranchByIdAsync().then(() => { });
-    //                 onGetAvatarAsync().then(() => { });
-    //             }
-    //         });
-    //     } catch (error) {
-    //         console.error(error);
-    //     }
-    // }
-    // const onRegisterBranchConfirm = () => {
-    //     Alert.alert('Đăng ký thành viên', 'Bạn muốn đăng ký thành viên?', [
-    //         {
-    //             text: 'Hủy',
-    //             style: 'cancel',
-    //         },
-    //         {
-    //             text: 'Đăng ký', onPress: onRegisterBranchAsync,
-    //         }
-    //     ]);
-    // };
+
+    const onRegistePackageAsync = async () => {
+        const now = new Date();
+        const data = {
+            pack: {
+                id: Number(packageState.id)
+            },
+            quantity: 1,
+            startDate: convertDateBooking(String(now))
+        }
+        try {
+            await packageService.addPackage(
+                data,
+                setLoading,
+            ).then(async (response) => {
+                if (response) {
+                    const supported = await Linking.canOpenURL(response.url);
+                    if (supported) {
+                        await Linking.openURL(response.url);
+                        Alert.alert(`Đăng kí gói thành viên thành công`);
+                    } else {
+                        Alert.alert(`Không thể mở đến trang VNPay`);
+                    }
+                }
+            });
+        } catch (error) {
+            console.error(error);
+            Alert.alert(`Đăng kí gói thành viên không thành công`);
+        }
+    }
+
+    const onRegistePackageConfirm = async () => {
+
+        Alert.alert('Đăng ký thành viên', 'Bạn muốn đăng ký thành viên?', [
+            {
+                text: 'Hủy',
+                style: 'cancel',
+            },
+            {
+                text: 'Đăng ký', onPress: onRegistePackageAsync,
+            }
+        ]);
+    };
+    useEffect(() => {
+        profileState?.packs?.filter((it: any) => {
+            if (it.id == packageState.id) {
+                setIsRegister(true)
+            }
+        })
+    }, [profileState])
 
     return (
         <MainLayout
@@ -130,7 +150,7 @@ const DetailPackageScreen = () => {
                             }}
                         >
                             {
-                                profileState?.gymBranch?.id == packageState.id
+                                isRegister
                                     ?
                                     <Pressable
                                         style={[
@@ -151,7 +171,7 @@ const DetailPackageScreen = () => {
                                     :
                                     <Pressable
                                         style={styles.register}
-                                    // onPress={onRegisterBranchConfirm}
+                                        onPress={onRegistePackageConfirm}
                                     >
                                         <Entypo name="add-user" size={16} color="#000000" />
                                         <Text style={[
