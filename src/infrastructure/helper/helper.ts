@@ -1,6 +1,7 @@
 import moment from "moment";
 import { any } from "prop-types";
 import Constants from "../../core/common/constants";
+import base64 from 'base-64';
 
 export const validateFields = (isImplicitChange: boolean, key: any, isCheck: boolean, setError: Function, error: any, message: string) => {
     if (isImplicitChange) {
@@ -160,3 +161,13 @@ export const formatCurrencyVND = (amount: string) => {
     let formattedAmount = amount.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
     return `${formattedAmount} ₫`;
 }
+
+export const arrayBufferToBase64 = (buffer: any) => {
+    let binary = '';
+    const bytes = new Uint8Array(buffer);
+    const len = bytes.byteLength;
+    for (let i = 0; i < len; i++) {
+        binary += String.fromCharCode(bytes[i]);
+    }
+    return base64.encode(binary);
+};

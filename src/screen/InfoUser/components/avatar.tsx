@@ -2,10 +2,10 @@ import React from 'react'
 import { Image, StyleSheet, Text, View } from 'react-native'
 import { useRecoilValue } from 'recoil';
 import { ProfileState } from '../../../core/atoms/profile/profileState';
+import { convertDateOnly } from '../../../infrastructure/helper/helper';
 
 const Avatar = () => {
     const dataProfile = useRecoilValue(ProfileState);
-
     return (
         <View style={styles.headerPart}>
             <View style={[
@@ -38,7 +38,7 @@ const Avatar = () => {
                 }
             ]}>
                 <Text style={styles.textLabel}>Ngày tham gia: </Text>
-                <Text style={styles.textDate}>18/01/2024</Text>
+                <Text style={styles.textDate}>{convertDateOnly(dataProfile.data.createdAt)} </Text>
             </View>
         </View>
     )

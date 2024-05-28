@@ -24,4 +24,8 @@ export class Endpoint {
         static getBranch = "/gym-branches"
         static getBranchById = "/gym-branches/admin"
     }
+    static Room = class {
+        static getRoom = "/rooms"
+        static getRoomById = "/rooms/admin"
+    }
 };

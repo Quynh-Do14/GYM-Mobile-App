@@ -70,8 +70,8 @@ const InputTextCommon = (props: Props) => {
                         { position: "relative" },
                         styles.fontStyle,
                         styles.inputStyle,
-                        validate[attribute]?.isError && styles.errorStyle
-
+                        validate[attribute]?.isError && styles.errorStyle,
+                        !editable && styles.editableStyle,
                     ]} />
                 <MessageError isError={validate[attribute]?.isError || false} message={validate[attribute]?.message || ""} />
             </View>
@@ -113,5 +113,9 @@ const styles = StyleSheet.create({
     },
     errorStyle: {
         borderBottomColor: "#f61a1a",
+    },
+    editableStyle: {
+        borderBottomColor: "#686b7d",
+        color: "#686b7d",
     }
 })

@@ -1,22 +1,26 @@
 import React, { useEffect, useState } from 'react'
 import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import MainLayout from '../../../infrastructure/common/layouts/layout'
-import { useRecoilState, useRecoilValue } from 'recoil'
+import { useRecoilState } from 'recoil'
 import { ProfileState } from '../../../core/atoms/profile/profileState'
 import InputTextCommon from '../../../infrastructure/common/components/input/input-text-common'
 import { useNavigation } from '@react-navigation/native'
 import authService from '../../../infrastructure/repositories/auth/service/auth.service'
 import DialogNotificationCommon from '../../../infrastructure/common/components/dialog/dialogNotification'
+import LoadingFullScreen from '../../../infrastructure/common/components/controls/loading';
+import SelectCommon from '../../../infrastructure/common/components/input/select-common'
+import Constants from '../../../core/common/constants'
 
 const EditProfile = () => {
-    const navigation = useNavigation<any>();
-
     const [_data, _setData] = useState<any>({});
     const [validate, setValidate] = useState<any>({});
     const [submittedTime, setSubmittedTime] = useState<any>(null);
     const [isMessageSuccess, setIsMessageSuccess] = useState<boolean>(false);
     const [isMessageError, setIsMessageError] = useState<boolean>(false);
-    const [detailUser, setdetailUser] = useState<any>({});
+    const [detailUser, setDetailUser] = useState<any>({});
+    const [loading, setLoading] = useState<boolean>(false);
+
+    const navigation = useNavigation<any>();
 
     const dataProfile = _data;
     const setDataProfile = (data: any) => {
@@ -29,10 +33,11 @@ const EditProfile = () => {
         if (dataProfile) {
             setDataProfile({
                 avatar: detailUser.avatar,
+                username: detailUser?.user?.username,
+                email: detailUser?.user?.email,
                 name: detailUser.name,
-                username: detailUser.username,
-                email: detailUser.email,
-
+                cccd: detailUser.cccd,
+                sex: detailUser.sex,
             });
         };
     }, [detailUser]);
@@ -58,13 +63,13 @@ const EditProfile = () => {
     const getProfileUser = async () => {
         try {
             await authService.profile(
-                () => { }
+                setLoading
             ).then((response) => {
                 if (response) {
                     setDataPosition({
                         data: response
                     })
-                    setdetailUser(response)
+                    setDetailUser(response)
                 }
             })
         } catch (error) {
@@ -81,11 +86,11 @@ const EditProfile = () => {
             try {
                 await authService.updateProfile(
                     {
-                        username: dataProfile.username,
                         name: dataProfile.name,
+                        username: dataProfile.username,
                         email: dataProfile.email,
                     },
-                    () => { },
+                    setLoading,
                     setIsMessageSuccess,
                     setIsMessageError,
                 ).then((response) => {
@@ -122,18 +127,6 @@ const EditProfile = () => {
                         </View>
                         <View>
                             <InputTextCommon
-                                label={"Tên người dùng"}
-                                attribute={"name"}
-                                dataAttribute={dataProfile.name}
-                                isRequired={false}
-                                setData={setDataProfile}
-                                editable={true}
-                                validate={validate}
-                                setValidate={setValidate}
-                                submittedTime={submittedTime}
-                            />
-
-                            <InputTextCommon
                                 label={"Tên đăng nhập"}
                                 attribute={"username"}
                                 dataAttribute={dataProfile.username}
@@ -144,7 +137,6 @@ const EditProfile = () => {
                                 setValidate={setValidate}
                                 submittedTime={submittedTime}
                             />
-
                             <InputTextCommon
                                 label={"Email"}
                                 attribute={"emai"}
@@ -155,6 +147,39 @@ const EditProfile = () => {
                                 validate={validate}
                                 setValidate={setValidate}
                                 submittedTime={submittedTime}
+                            />
+                            <InputTextCommon
+                                label={"Tên người dùng"}
+                                attribute={"name"}
+                                dataAttribute={dataProfile.name}
+                                isRequired={false}
+                                setData={setDataProfile}
+                                editable={true}
+                                validate={validate}
+                                setValidate={setValidate}
+                                submittedTime={submittedTime}
+                            />
+                            <InputTextCommon
+                                label={"CCCD"}
+                                attribute={"cccd"}
+                                dataAttribute={dataProfile.cccd}
+                                isRequired={false}
+                                setData={setDataProfile}
+                                editable={true}
+                                validate={validate}
+                                setValidate={setValidate}
+                                submittedTime={submittedTime}
+                            />
+                            <SelectCommon
+                                label={"Giới tính"}
+                                attribute={"sex"}
+                                dataAttribute={dataProfile.sex}
+                                isRequired={false}
+                                setData={setDataProfile}
+                                validate={validate}
+                                setValidate={setValidate}
+                                submittedTime={submittedTime}
+                                listArray={Constants.Gender.List}
                             />
                         </View>
                     </View>
@@ -178,6 +203,7 @@ const EditProfile = () => {
                 onConfirm={() => setIsMessageError(false)}
                 message={"Cập nhật không thành công"}
             />
+            <LoadingFullScreen loading={loading} />
         </MainLayout >
 
     )

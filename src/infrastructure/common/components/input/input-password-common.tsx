@@ -56,6 +56,7 @@ const InputPasswordCommon = (props: Props) => {
     const toggleShowPassword = () => {
         setShowPassword(!showPassword);
     };
+    
     return (
         <KeyboardAvoidingView>
             <View

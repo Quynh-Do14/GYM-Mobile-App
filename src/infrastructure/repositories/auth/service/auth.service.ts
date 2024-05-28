@@ -18,7 +18,6 @@ class AuthService {
                         );
                     }
                     setLoading(false)
-                    // SuccessMessage("Đăng nhập thành công", "")
                     return response;
                 });
         } catch (error) {
@@ -28,57 +27,19 @@ class AuthService {
             setLoading(false);
         }
     }
-    // async loginEmail(data, setLoading) {
-    //     setLoading(true)
-    //     try {
-    //         return await RequestService
-    //             .post(apiRoutes.common.auth.login_email, {
-    //                 ...data
-    //             })
-    //             .then(response => {
-    //                 if (response.accessToken) {
-    //                     saveToken({
-    //                         accessToken: response.accessToken,
-    //                         refreshToken: response.refreshToken,
-    //                         userId: response.id
-    //                     });
-    //                     setStorage("userId", response.id)
-    //                 }
-    //                 setLoading(false)
-    //                 SuccessMessage("Đăng nhập thành công", "")
-    //                 return response;
-    //             });
-    //     } catch (error) {
-    //         if (error.response.data.message) {
-    //             FailMessage(messageConfig(error.response.data.message), "")
-    //         }
-    //         else {
-    //             FailMessage("Đăng nhập không thành công", "Tài khoản của bạn chưa đúng")
-    //         }
-    //         console.error(error)
-    //     } finally {
-    //         setLoading(false);
-    //     }
-    // }
+ 
     async logout(setLoading: Function) {
         setLoading(true)
         try {
-            // clearToken();
             clearStorage()
-            // SuccessMessage("Đăng xuất thành công", "") 
         } catch (error) {
             console.error(error)
         } finally {
             setLoading(false)
-            // window.location.reload()
-            // window.location.href(config.routes.web.home)
         };
     };
 
-
     async register(data: any, setLoading: Function, setIsMessageSuccess: Function, setIsMessageError: Function) {
-        console.log("data", data);
-
         setLoading(true)
         try {
             return await RequestService.
@@ -112,7 +73,7 @@ class AuthService {
     async updateProfile(data: object, setLoading: Function, setIsMessageSuccess: Function, setIsMessageError: Function) {
         setLoading(true)
         try {
-            return await RequestService.put(Endpoint.Auth.UpdateProfile,
+            return await RequestService.putForm(Endpoint.Auth.UpdateProfile,
                 { ...data }
             ).then(response => {
                 setIsMessageSuccess(true)
@@ -120,6 +81,7 @@ class AuthService {
             });
         }
         catch (error) {
+            console.error(error)
             setIsMessageError(false)
         } finally {
             setLoading(false);

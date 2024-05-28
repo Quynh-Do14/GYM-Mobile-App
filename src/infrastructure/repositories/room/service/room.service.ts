@@ -1,12 +1,12 @@
 import { Endpoint } from "../../../../core/common/apiLink";
 import { RequestService } from "../../../utils/response";
 
-class BranchService {
-    async getBranch(params: any, setLoading: Function) {
+class RoomService {
+    async getRoom(params: any, setLoading: Function) {
         setLoading(true)
         try {
             return await RequestService.
-                get(Endpoint.Branch.getBranch,
+                get(Endpoint.Room.getRoom,
                     { ...params }
                 ).then(response => {
                     return response;
@@ -17,11 +17,11 @@ class BranchService {
             setLoading(false);
         }
     }
-    async getBranchById(id: number, setLoading: Function) {
+    async getRoomById(id: number, setLoading: Function) {
         setLoading(true)
         try {
             return await RequestService.
-                get(`${Endpoint.Branch.getBranchById}/${id}`,
+                get(`${Endpoint.Room.getRoomById}/${id}`,
                 ).then(response => {
                     return response;
                 });
@@ -36,7 +36,7 @@ class BranchService {
 
         try {
             return await RequestService.
-                getFile(`${Endpoint.Branch.getBranch}/${id}/image`).then(response => {
+                getFile(`${Endpoint.Room.getRoom}/${id}/image`).then(response => {
                     return response;
                 });
         }
@@ -46,6 +46,5 @@ class BranchService {
             setLoading(false);
         }
     }
-
 }
-export default new BranchService();
+export default new RoomService();

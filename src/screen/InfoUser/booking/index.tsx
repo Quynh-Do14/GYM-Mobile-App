@@ -4,9 +4,12 @@ import MainLayout from '../../../infrastructure/common/layouts/layout'
 import bookingService from '../../../infrastructure/repositories/booking/service/booking.service';
 import { Image, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { convertDate } from '../../../infrastructure/helper/helper';
+import LoadingFullScreen from '../../../infrastructure/common/components/controls/loading';
 
 const BookingSchedule = () => {
-    const [listBooking, setListBooking] = useState<Array<any>>([])
+    const [listBooking, setListBooking] = useState<Array<any>>([]);
+    const [loading, setLoading] = useState<boolean>(false);
+
     const navigation = useNavigation<any>();
     const isFocused = useIsFocused();
 
@@ -19,7 +22,7 @@ const BookingSchedule = () => {
         try {
             await bookingService.getBooking(
                 params,
-                () => { }
+                setLoading
             ).then((response) => {
                 if (response) {
                     setListBooking(response.content)
@@ -114,6 +117,7 @@ const BookingSchedule = () => {
                     }
                 </View >
             </ScrollView>
+            <LoadingFullScreen loading={loading} />
         </MainLayout >
     )
 }

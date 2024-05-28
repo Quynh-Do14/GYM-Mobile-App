@@ -6,7 +6,7 @@ import { Dimensions, Image, ImageBackground, StyleSheet, Text, TouchableOpacity,
 
 const { width: viewportWidth } = Dimensions.get('window');
 
-const MainLayout = ({ onGoBack, isBackButton = false, title, bgImg = "", ...props }: any) => {
+const MainLayout = ({ onGoBack, isBackButton = false, title, bgImg , ...props }: any) => {
     const [, setDataPosition] = useRecoilState(ProfileState);
 
     const getProfileUser = async () => {
@@ -39,7 +39,7 @@ const MainLayout = ({ onGoBack, isBackButton = false, title, bgImg = "", ...prop
                 bgImg
                     ?
                     <ImageBackground
-                        source={bgImg}
+                        source={{ uri: bgImg }}
                         style={[
                             styles.header,
                             {
