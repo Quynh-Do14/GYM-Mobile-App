@@ -4,7 +4,7 @@ export const clearToken = async () => {
   await AsyncStorage.removeItem("token");
 };
 export const clearStorage = async () => {
-  await AsyncStorage.clear;
+  await AsyncStorage.clear();
 };
 
 export const isTokenStoraged = async () => {

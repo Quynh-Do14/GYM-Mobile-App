@@ -19,9 +19,14 @@ export class Endpoint {
     }
     static Package = class {
         static getPackage = "/packages"
+        static addPackage = "/member_packages/add"
     }
     static Branch = class {
         static getBranch = "/gym-branches"
         static getBranchById = "/gym-branches/admin"
+    }
+    static Room = class {
+        static getRoom = "/rooms"
+        static getRoomById = "/rooms/admin"
     }
 };

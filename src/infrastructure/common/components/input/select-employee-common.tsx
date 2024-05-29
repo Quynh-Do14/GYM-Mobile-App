@@ -5,6 +5,7 @@ import { convertTimeParams, validateFields } from "../../../helper/helper";
 import { MessageError } from '../controls/MessageError';
 import { Picker } from '@react-native-picker/picker';
 import employeeService from '../../../repositories/employee/service/employee.service';
+import { useIsFocused } from '@react-navigation/native';
 
 type Props = {
     label: string,
@@ -34,6 +35,7 @@ const SelectEmployeeCommon = (props: Props) => {
 
     const labelLower = label?.toLowerCase();
     const pickerRef = useRef<any>();
+    const isFocused = useIsFocused();
 
     const validateEvent = (isImplicitChange: boolean = false) => {
         let checkValidate
@@ -87,6 +89,13 @@ const SelectEmployeeCommon = (props: Props) => {
         }
 
     }
+
+    useEffect(() => {
+        if (isFocused) {
+            setListEmployeePT([])
+        }
+    }, [isFocused]);
+
     useEffect(() => {
         if (dataAttribute.bookingTime && dataAttribute.endTime) {
             getEmployeePTAsync().then(() => { })

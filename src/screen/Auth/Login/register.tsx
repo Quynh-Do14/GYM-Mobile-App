@@ -8,16 +8,18 @@ import { useNavigation } from '@react-navigation/native';
 import InputTextCommon from '../../../infrastructure/common/components/input/input-text-common';
 import InputPasswordCommon from '../../../infrastructure/common/components/input/input-password-common';
 import DialogNotificationCommon from '../../../infrastructure/common/components/dialog/dialogNotification';
+import LoadingFullScreen from '../../../infrastructure/common/components/controls/loading';
+
 type Props = {
-    setTabSelect: Function
+    setTabSelect: Function,
+    setLoading: Function
 }
 const RegisterTab = (props: Props) => {
-    const { setTabSelect } = props;
+    const { setTabSelect, setLoading } = props;
     const [_data, _setData] = useState<any>({});
     const [validate, setValidate] = useState<any>({});
     const [submittedTime, setSubmittedTime] = useState<any>(null);
-    const [isMessageSuccess, setIsMessageSuccess] = useState<boolean>(false);
-    const [isMessageError, setIsMessageError] = useState<boolean>(false);
+
 
     const dataProfile = _data;
     const setDataProfile = (data: any) => {
@@ -39,14 +41,7 @@ const RegisterTab = (props: Props) => {
         return allRequestOK;
     };
 
-    const onCloseSigunUp = () => {
-        setIsMessageSuccess(false)
-        setTabSelect(1)
-
-    }
-
     const onSignupAsync = async () => {
-
         await setSubmittedTime(Date.now());
         if (isValidData()) {
             try {
@@ -58,9 +53,7 @@ const RegisterTab = (props: Props) => {
                         password: dataProfile.password,
                         roles: ["user"],
                     },
-                    () => { },
-                    setIsMessageSuccess,
-                    setIsMessageError
+                    setLoading,
                 ).then((response) => {
                     if (response) {
                     }
@@ -149,16 +142,6 @@ const RegisterTab = (props: Props) => {
                     </Text>
                 </TouchableOpacity>
             </View>
-            <DialogNotificationCommon
-                visible={isMessageSuccess}
-                onConfirm={onCloseSigunUp}
-                message={"Đăng kí thành công"}
-            />
-            <DialogNotificationCommon
-                visible={isMessageError}
-                onConfirm={() => setIsMessageError(false)}
-                message={"Đăng kí không thành công"}
-            />
         </ScrollView>
     )
 }

@@ -14,8 +14,30 @@ export default class Constants {
     static Navigator = class {
         static HomeScreen = class {
             static value = "HomeScreen"
-            static DetailBranch = class {
-                static value = "DetailBranch"
+
+        }
+        static Branch = class {
+            static BranchScreen = class {
+                static value = "BranchScreen"
+            }
+            static DetailBranchScreen = class {
+                static value = "DetailBranchScreen"
+            }
+        }
+        static Package = class {
+            static PackageScreen = class {
+                static value = "PackageScreen"
+            }
+            static DetailPackageScreen = class {
+                static value = "DetailPackageScreen"
+            }
+        }
+        static Room = class {
+            static RoomScreen = class {
+                static value = "RoomScreen"
+            }
+            static DetailRoomScreen = class {
+                static value = "DetailRoomScreen"
             }
         }
         static BookingScreen = class {
