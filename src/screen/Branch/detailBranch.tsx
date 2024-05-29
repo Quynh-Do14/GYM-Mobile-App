@@ -23,6 +23,7 @@ const DetailBranchScreen = () => {
     const navigation = useNavigation<any>();
     const branchState = useRecoilValue(BranchState).data;
     const profileState = useRecoilValue(ProfileState).data;
+    const [, setDataProfile] = useRecoilState(ProfileState);
 
     const [loading, setLoading] = useState<boolean>(false);
     const [imageUrl, setImageUrl] = useState<string>("");
@@ -60,6 +61,7 @@ const DetailBranchScreen = () => {
             })
         )
     }
+
     const onGetAvatarAsync = async () => {
         try {
             await branchService.getAvatar(
@@ -86,14 +88,17 @@ const DetailBranchScreen = () => {
                     gymBranch: Number(branchState.id),
                 },
                 setLoading,
-                // setIsMessageSuccess,
-                // setIsMessageError,
-                () => { },
-                () => { },
             ).then((response) => {
                 if (response) {
                     getBranchByIdAsync().then(() => { });
                     onGetAvatarAsync().then(() => { });
+                    setDataProfile({
+                        data: {
+                            gymBranch: {
+                                id: branchState.id
+                            }
+                        }
+                    })
                 }
             });
         } catch (error) {
@@ -159,7 +164,7 @@ const DetailBranchScreen = () => {
                                         style={[
                                             styles.register,
                                             {
-                                                backgroundColor:"#cbcbcb"
+                                                backgroundColor: "#cbcbcb"
                                             }
                                         ]}
                                     >

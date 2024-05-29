@@ -74,7 +74,6 @@ const DetailPackageScreen = () => {
             });
         } catch (error) {
             console.error(error);
-            Alert.alert(`Đăng kí gói thành viên không thành công`);
         }
     }
 

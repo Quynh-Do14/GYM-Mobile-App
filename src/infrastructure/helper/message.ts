@@ -18,6 +18,8 @@ export const messageConfig = (message: string) => {
             return `Mật khẩu hiện tại không chính xác`;
         case "confirm_password_not_match":
             return `Mật khẩu xác nhận không chính xác`;
+        case "Member already has a package":
+            return `Bạn đã có 1 gói thành viên`;
         default:
             return "Đã có lỗi xảy ra"
     }

@@ -8,7 +8,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 const { width: viewportWidth } = Dimensions.get('window');
 
 const MainLayout = ({ onGoBack, isBackButton = false, title, bgImg, ...props }: any) => {
-    const [, setDataPosition] = useRecoilState(ProfileState);
+    const [, setDataProfile] = useRecoilState(ProfileState);
     const [token, setToken] = useState<string>("");
 
     const getTokenStoraged = async () => {
@@ -30,7 +30,7 @@ const MainLayout = ({ onGoBack, isBackButton = false, title, bgImg, ...props }: 
                     () => { }
                 ).then((response) => {
                     if (response) {
-                        setDataPosition({
+                        setDataProfile({
                             data: response
                         })
                     }
@@ -40,7 +40,7 @@ const MainLayout = ({ onGoBack, isBackButton = false, title, bgImg, ...props }: 
             }
         }
     }
-    
+
     useEffect(() => {
         if (token) {
             getProfileUser().then(() => { })

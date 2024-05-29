@@ -81,7 +81,6 @@ const EditProfile = () => {
     useEffect(() => {
         getProfileUser().then(() => { })
     }, []);
-    console.log("dataProfile", dataProfile);
 
     const onUpdateProfile = async () => {
         await setSubmittedTime(Date.now());
@@ -245,7 +244,7 @@ const styles = StyleSheet.create({
         flexDirection: "column",
     },
     avatarChange: {
-        paddingVertical: 20,
+        paddingVertical: 12,
         display: "flex",
         flexDirection: "row",
         justifyContent: "center",

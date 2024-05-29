@@ -131,7 +131,7 @@ const styles = StyleSheet.create({
         position: "absolute",
         bottom: 16,
         left: 16,
-        backgroundColor: "#00000063",
+        backgroundColor: "#000000dd",
         display: "flex",
         flexDirection: "column",
         gap: 4,

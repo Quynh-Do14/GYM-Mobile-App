@@ -74,6 +74,7 @@ class AuthService {
 
     async updateProfile(data: object, setLoading: Function) {
         setLoading(true)
+
         try {
             return await RequestService.putForm(Endpoint.Auth.UpdateProfile,
                 { ...data }

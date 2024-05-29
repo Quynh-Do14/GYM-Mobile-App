@@ -1,6 +1,7 @@
+import { Alert } from "react-native";
 import { Endpoint } from "../../../../core/common/apiLink";
 import { RequestService } from "../../../utils/response";
-
+import { messageConfig } from "../../../../infrastructure/helper/message";
 class PackageService {
     async getPackage(params: any, setLoading: Function) {
         setLoading(true)
@@ -57,8 +58,9 @@ class PackageService {
                     return response;
                 });
         }
-        catch (error) {
+        catch (error: any) {
             console.error(error)
+            Alert.alert(`Đăng nhập không thành công`, messageConfig(error.response.data.message));
         } finally {
             setLoading(false);
         }
