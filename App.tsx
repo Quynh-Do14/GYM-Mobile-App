@@ -24,6 +24,8 @@ import DetailRoomScreen from './src/screen/Room/detailRoom';
 import BranchScreen from './src/screen/Branch';
 import PackageScreen from './src/screen/Package';
 import DetailPackageScreen from './src/screen/Package/detailPackage';
+import BranchMember from './src/screen/InfoUser/branchMember';
+import PackageUser from './src/screen/InfoUser/packageUser';
 
 const Stack = createNativeStackNavigator();
 const StackNavigator = () => {
@@ -64,6 +66,9 @@ const StackNavigator = () => {
       <Stack.Screen name={Constants.Navigator.InfoUserScreen.EditProfile.value} component={EditProfile} />
       <Stack.Screen name={Constants.Navigator.InfoUserScreen.BookingSchedule.value} component={BookingSchedule} />
       <Stack.Screen name={Constants.Navigator.InfoUserScreen.WorkoutSessions.value} component={WorkoutSessions} />
+      <Stack.Screen name={Constants.Navigator.InfoUserScreen.BranchMember.value} component={BranchMember} />
+      <Stack.Screen name={Constants.Navigator.InfoUserScreen.PackageUser.value} component={PackageUser} />
+
       <Stack.Screen name={Constants.Navigator.Auth.ForgotPasswordScreen.value} component={ForgotPasswordScreen} />
       <Stack.Screen name={Constants.Navigator.Auth.ChangePasswordScreen.value} component={ChangePasswordScreen} />
       <Stack.Screen name={Constants.Navigator.Auth.VerifyScreen.value} component={VerifyScreen} />

@@ -1,70 +1,64 @@
+import { useNavigation } from '@react-navigation/native';
 import React, { useEffect, useState } from 'react'
 import { Dimensions, Image, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native'
-import MainLayout from '../../infrastructure/common/layouts/layout'
-import branchService from '../../infrastructure/repositories/branch/service/branch.service'
-import { useNavigation } from '@react-navigation/native';
-import Constants from '../../core/common/constants';
-import { useRecoilState } from 'recoil';
-import { BranchState } from '../../core/atoms/branchState/branchState';
-import LoadingFullScreen from '../../infrastructure/common/components/controls/loading';
-import Entypo from 'react-native-vector-icons/Entypo';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import LoadingFullScreen from '../../../infrastructure/common/components/controls/loading'
+import MainLayout from '../../../infrastructure/common/layouts/layout'
+import Foundation from 'react-native-vector-icons/Foundation';
+import Constants from '../../../core/common/constants';
+import { ProfileState } from '../../../core/atoms/profile/profileState';
+import { PackageState } from '../../../core/atoms/package/packageState';
+import { formatCurrencyVND } from '../../../infrastructure/helper/helper';
 
 const { width: viewportWidth } = Dimensions.get('window');
 const { height: viewportHeight } = Dimensions.get('window');
 
-const BranchScreen = () => {
-    const [listBranch, setListBranch] = useState<Array<any>>([]);
+const PackageUser = () => {
     const [loading, setLoading] = useState<boolean>(false);
+    const [listPackage, setListPackage] = useState<Array<any>>([]);
 
     const navigation = useNavigation<any>();
-    const [, setBranchState] = useRecoilState(BranchState)
+    const profileState = useRecoilValue(ProfileState).data;
+    const [, setPackageState] = useRecoilState(PackageState)
+
 
     const onGoBack = () => {
         navigation.goBack();
     }
-    const getListBranchAsync = async () => {
-        try {
-            await branchService.getBranch(
-                {},
-                setLoading
-            ).then((response) => {
-                if (response) {
-                    setListBranch(response.content)
-                }
-            })
-        } catch (error) {
-            console.error(error);
-        }
-    }
-    useEffect(() => {
-        getListBranchAsync().then(() => { })
-    }, []);
 
-    const onNavigateBranch = (it: any) => {
+    const onNavigatePackage = (it: any) => {
         navigation.navigate(
-            Constants.Navigator.Branch.DetailBranchScreen.value,
-            setBranchState({
+            Constants.Navigator.Package.DetailPackageScreen.value,
+            setPackageState({
                 data: it
             })
         )
     };
 
+
+    useEffect(() => {
+        if (profileState?.packs) {
+            setListPackage(profileState.packs)
+        }
+    }, [profileState]);
+    console.log("profileState", profileState);
+
     return (
         <MainLayout
-            title={"Chi nhánh"}
+            title={"Gói thành viên"}
             isBackButton={true}
             onGoBack={onGoBack}
         >
             <ScrollView>
                 {
-                    listBranch && listBranch.length
+                    listPackage && listPackage.length
                         ?
                         <View style={styles.content}>
                             {
-                                listBranch && listBranch.length && listBranch.map((it, index) => (
+                                listPackage && listPackage.length && listPackage.map((it, index) => (
                                     <Pressable
                                         key={index}
-                                        onPress={() => onNavigateBranch(it)}
+                                        onPress={() => onNavigatePackage(it)}
                                     >
                                         <Image
                                             source={{ uri: `data:image/jpeg;base64,${it?.image.data}` }}
@@ -81,7 +75,7 @@ const BranchScreen = () => {
                                             <Text
                                                 style={styles.subTitle}
                                             >
-                                                <Entypo name="location" size={16} color="#D0FD3E" /> {it.address}
+                                                <Foundation name="pricetag-multiple" size={16} color="#D0FD3E" /> {formatCurrencyVND(String(it.price))}
                                             </Text>
                                         </View>
                                     </Pressable>
@@ -98,17 +92,17 @@ const BranchScreen = () => {
                                 },
                                 styles.title
                             ]}>
-                                Chưa có chi nhánh nào !!
-                            </Text>
+                                Bạn chưa đăng ký gói thành viên !!</Text>
                         </View>
                 }
+
             </ScrollView>
             <LoadingFullScreen loading={loading} />
         </MainLayout>
     )
 }
 
-export default BranchScreen;
+export default PackageUser
 const styles = StyleSheet.create({
     container: {
         backgroundColor: "#1C1C1E",
@@ -134,7 +128,7 @@ const styles = StyleSheet.create({
     content: {
         display: "flex",
         flexDirection: "column",
-        gap: 20
+        gap: 20,
     },
     imgBranch: {
         width: viewportWidth - 20 * 2,

@@ -10,9 +10,9 @@ class AuthService {
         setLoading(true)
         try {
             return await RequestService
-                .post(Endpoint.Auth.Login, {
-                    ...data
-                })
+                .post(Endpoint.Auth.Login,
+                    { ...data }
+                )
                 .then(response => {
                     if (response) {
                         saveToken(
@@ -45,9 +45,9 @@ class AuthService {
         setLoading(true)
         try {
             return await RequestService.
-                post(Endpoint.Auth.Signup, {
-                    ...data
-                }).then(response => {
+                post(Endpoint.Auth.Signup,
+                    { ...data }
+                ).then(response => {
                     Alert.alert(`Đăng kí thành công`);
                     return response;
                 });
