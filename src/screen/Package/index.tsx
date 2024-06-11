@@ -59,35 +59,52 @@ const PackageScreen = () => {
             onGoBack={onGoBack}
         >
             <ScrollView>
-                <View style={styles.content}>
-                    {
-                        listPackage.map((it, index) => (
-                            <Pressable
-                                key={index}
-                                onPress={() => onNavigatePackage(it)}
-                            >
-                                <Image
-                                    source={{ uri: `data:image/jpeg;base64,${it?.image.data}` }}
-                                    style={styles.imgBranch}
-                                />
-                                <View
-                                    style={styles.card}
-                                >
-                                    <Text
-                                        style={styles.title}
+                {
+                    listPackage && listPackage.length
+                        ?
+                        <View style={styles.content}>
+                            {
+                                listPackage && listPackage.length && listPackage.map((it, index) => (
+                                    <Pressable
+                                        key={index}
+                                        onPress={() => onNavigatePackage(it)}
                                     >
-                                        {it.name}
-                                    </Text>
-                                    <Text
-                                        style={styles.subTitle}
-                                    >
-                                        <Foundation name="pricetag-multiple" size={16} color="#D0FD3E" /> {formatCurrencyVND(String(it.price))}
-                                    </Text>
-                                </View>
-                            </Pressable>
-                        ))
-                    }
-                </View>
+                                        <Image
+                                            source={{ uri: `data:image/jpeg;base64,${it?.image.data}` }}
+                                            style={styles.imgBranch}
+                                        />
+                                        <View
+                                            style={styles.card}
+                                        >
+                                            <Text
+                                                style={styles.title}
+                                            >
+                                                {it.name}
+                                            </Text>
+                                            <Text
+                                                style={styles.subTitle}
+                                            >
+                                                <Foundation name="pricetag-multiple" size={16} color="#D0FD3E" /> {formatCurrencyVND(String(it.price))}
+                                            </Text>
+                                        </View>
+                                    </Pressable>
+                                ))
+                            }
+                        </View>
+                        :
+                        <View>
+                            <Text style={[
+                                {
+                                    textAlign: "center",
+                                    paddingVertical: 40,
+                                    paddingHorizontal: 10
+                                },
+                                styles.title
+                            ]}>
+                                Chưa có gói thành viên nào !!
+                            </Text>
+                        </View>
+                }
             </ScrollView>
             <LoadingFullScreen loading={loading} />
         </MainLayout>

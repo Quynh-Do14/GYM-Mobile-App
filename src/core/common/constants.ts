@@ -60,6 +60,12 @@ export default class Constants {
             static WorkoutSessions = class {
                 static value = "WorkoutSessions"
             }
+            static BranchMember = class {
+                static value = "BranchMember"
+            }
+            static PackageUser = class {
+                static value = "PackageUser"
+            }
         }
         static Auth = class {
             static LoginScreen = class {
@@ -88,9 +94,17 @@ export default class Constants {
                 value: "BookingSchedule",
                 label: "Lịch đăng kí"
             },
+            // {
+            //     value: "WorkoutSessions",
+            //     label: "Tiến trình luyện tập"
+            // },
             {
-                value: "WorkoutSessions",
-                label: "Tiến trình luyện tập"
+                value: "BranchMember",
+                label: "Thành viên chi nhánh"
+            },
+            {
+                value: "PackageUser",
+                label: "Gói thành viên"
             },
         ]
     }

@@ -56,6 +56,7 @@ const RegisterTab = (props: Props) => {
                     setLoading,
                 ).then((response) => {
                     if (response) {
+                        setTabSelect(1)
                     }
                 });
             } catch (error) {
