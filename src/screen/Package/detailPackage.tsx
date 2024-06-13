@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react'
 import MainLayout from "../../infrastructure/common/layouts/layout";
 import { useNavigation } from '@react-navigation/native';
 import { useRecoilValue } from 'recoil';
-import { Alert, Dimensions, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Alert, Dimensions, Pressable, ScrollView, StyleSheet, Text, View, Linking } from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Entypo from 'react-native-vector-icons/Entypo';
 import LoadingFullScreen from '../../infrastructure/common/components/controls/loading';
@@ -11,7 +11,6 @@ import { ProfileState } from '../../core/atoms/profile/profileState';
 import packageService from '../../infrastructure/repositories/package/service/package.service';
 import { PackageState } from '../../core/atoms/package/packageState';
 import Foundation from 'react-native-vector-icons/Foundation';
-import { Linking } from 'react-native';
 
 const { width: viewportWidth } = Dimensions.get('window');
 const { height: viewportHeight } = Dimensions.get('window');
@@ -63,19 +62,48 @@ const DetailPackageScreen = () => {
                 setLoading,
             ).then(async (response) => {
                 if (response) {
-                    const supported = await Linking.canOpenURL(response.url);
-                    if (supported) {
-                        await Linking.openURL(response.url);
-                        Alert.alert(`Đăng kí gói thành viên thành công`);
-                    } else {
-                        Alert.alert(`Không thể mở đến trang VNPay`);
-                    }
-                }
-            });
+                    // Linking.canOpenURL(response.url)
+                    //     .then((supported) => {
+                    //         console.log("supported", supported);
+
+                    //         if (supported) {
+                    //             Linking.openURL(response.url);
+                    //             Alert.alert(`Đăng kí gói thành viên thành công`)
+                    //         } else {
+                    //             Alert.alert(`Không thể mở đến trang VNPay`);
+                    //         }
+                    //     })
+                    //     .catch((err) => console.error('An error occurred', err));
+                    Linking.openURL(response.url).catch((err) => {
+                        if (err) {
+                            Alert.alert(`Không thể mở đến trang VNPay`);
+                        }
+                    });
+                };
+            }
+            );
         } catch (error) {
             console.error(error);
         }
     }
+
+    useEffect(() => {
+        const handleUrl = (event: any) => {
+            console.log('Incoming URL:', event.url);
+        };
+
+        Linking.addEventListener('url', handleUrl);
+
+        Linking.getInitialURL().then((url) => {
+            if (url) {
+                handleUrl({ url });
+            }
+        });
+        // Cleanup the event listener on unmount
+        // return () => {
+        //     Linking.removeAllListeners('url');
+        // };
+    }, []);
 
     const onRegistePackageConfirm = async () => {
 
