@@ -59,13 +59,11 @@ const BookingScreen = () => {
                     // setIsMessageError
                 ).then(async (response) => {
                     if (response.url) {
-                        const supported = await Linking.canOpenURL(response.url);
-                        if (supported) {
-                            await Linking.openURL(response.url);
-                            Alert.alert(`Đăng kí lịch tập thành công`);
-                        } else {
-                            Alert.alert(`Không thể mở đến trang VNPay`);
-                        }
+                        Linking.openURL(response.url).catch((err) => {
+                            if (err) {
+                                Alert.alert(`Không thể mở đến trang VNPay`);
+                            }
+                        });
 
                         setDataBooking({})
                     }
@@ -77,6 +75,23 @@ const BookingScreen = () => {
         }
     }
 
+    useEffect(() => {
+        const handleUrl = (event: any) => {
+            console.log('Incoming URL:', event.url);
+        };
+
+        Linking.addEventListener('url', handleUrl);
+
+        Linking.getInitialURL().then((url) => {
+            if (url) {
+                handleUrl({ url });
+            }
+        });
+        // Cleanup the event listener on unmount
+        // return () => {
+        //     Linking.removeAllListeners('url');
+        // };
+    }, []);
 
     const onBookingConfirm = async () => {
 
